@@ -1,3 +1,4 @@
+import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class MaintenancePage extends StatelessWidget {
@@ -9,7 +10,7 @@ class MaintenancePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('ТО'),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
+          color: AppTheme.textColor,
           fontSize: 28,
           fontWeight: FontWeight.bold
         )

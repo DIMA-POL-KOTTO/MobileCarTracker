@@ -1,3 +1,4 @@
+import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AddFuelPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class AddFuelPage extends StatelessWidget {
         
         title: const Text('Добавить заправку'),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
+          color: AppTheme.textColor,
           fontSize: 28,
           fontWeight: FontWeight.bold,
         )
@@ -37,7 +38,7 @@ class AddFuelPage extends StatelessWidget {
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.camera_alt, size: 32, color: Colors.blue),
+                      Icon(Icons.camera_alt, size: 32, color: AppTheme.primaryColor),
                       SizedBox(width: 20),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -45,12 +46,12 @@ class AddFuelPage extends StatelessWidget {
                         children: [
                           Text(
                             'Сфотографировать чек',
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.blue
+                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textColor,
                           ),
                           ),
                           SizedBox(height: 4),
                           Text("Данные будут распознаны автоматически",
-                            style: TextStyle(fontSize: 13, color: Colors.blue
+                            style: TextStyle(fontSize: 13, color: AppTheme.textSecondaryColor
                           ),
                         ),
                       ],
@@ -73,7 +74,7 @@ class AddFuelPage extends StatelessWidget {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.edit, size: 32, color: Colors.blue),
+                    Icon(Icons.edit, size: 32, color: AppTheme.primaryColor),
                     SizedBox(width: 20),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -81,12 +82,12 @@ class AddFuelPage extends StatelessWidget {
                       children: [
                         Text(
                           'Ввести вручную',
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.blue
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textColor
                         ),
                         ),
                         SizedBox(height: 4),
                         Text("Самостоятельно указать данные заправки", 
-                          style: TextStyle(fontSize: 13, color: Colors.blue
+                          style: TextStyle(fontSize: 13, color: AppTheme.textSecondaryColor
                         ),
                       ),
                     ],

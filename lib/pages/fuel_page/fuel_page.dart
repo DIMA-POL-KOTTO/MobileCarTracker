@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:car_tracker/theme/app_theme.dart';
 import 'add_fuel_page.dart';
 
 class FuelPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class FuelPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Заправки'),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
+          color: AppTheme.textColor,
           fontSize: 28,
           fontWeight: FontWeight.bold
         )
@@ -22,8 +23,8 @@ class FuelPage extends StatelessWidget {
       ),    
     ),
     floatingActionButton: FloatingActionButton(
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
+      backgroundColor: AppTheme.primaryColor,
+      foregroundColor: AppTheme.backgroundColor,
       onPressed: () {
         Navigator.push(
           context,

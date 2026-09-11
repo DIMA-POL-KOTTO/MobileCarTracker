@@ -2,6 +2,7 @@ import 'package:car_tracker/pages/home_page.dart';
 import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
 import 'package:car_tracker/pages/maintenance_page.dart';
 import 'package:car_tracker/pages/more_page.dart';
+import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -51,13 +52,13 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
 
-        backgroundColor: const Color.fromARGB(255, 247, 247, 247),
+        backgroundColor: AppTheme.backgroundColor,
 
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
 
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: AppTheme.primaryColor,
+        unselectedItemColor: AppTheme.secondaryColor,
 
         items: const [
           BottomNavigationBarItem(
@@ -81,18 +82,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-
-//Главная
-
-
-
-//Заправки
-
-
-
-//ТО
-
-//Ещё
 
 
 
