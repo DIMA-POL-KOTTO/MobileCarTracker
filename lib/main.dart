@@ -3,6 +3,8 @@ import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
 import 'package:car_tracker/pages/maintenance_page.dart';
 import 'package:car_tracker/pages/more_page/more_page.dart';
 import 'package:car_tracker/theme/app_theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +17,18 @@ class CarCareApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'CarCare',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ru', ''), // Русский
+        Locale('en', ''), // Английский
+      ],
       home: const MainScreen(),
     );
   }
