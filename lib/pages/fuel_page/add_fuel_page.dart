@@ -10,11 +10,7 @@ class AddFuelPage extends StatelessWidget {
       appBar: AppBar(
         
         title: const Text('Добавить заправку'),
-        titleTextStyle: const TextStyle(
-          color: AppTheme.textColor,
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-        )
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
