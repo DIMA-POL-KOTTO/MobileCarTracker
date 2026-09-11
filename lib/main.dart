@@ -1,3 +1,7 @@
+import 'package:car_tracker/pages/home_page.dart';
+import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
+import 'package:car_tracker/pages/maintenance_page.dart';
+import 'package:car_tracker/pages/more_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +16,6 @@ class CarCareApp extends StatelessWidget {
     return MaterialApp(
       title: 'CarCare',
       home: const MainScreen(),
-      
     );
   }
 }
@@ -81,265 +84,15 @@ class _MainScreenState extends State<MainScreen> {
 
 //Главная
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Главная'),
-        titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
-          fontSize: 28,
-          fontWeight: FontWeight.bold
-        )
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.directions_car),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Passat B5",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text("1999 г."),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Текущий пробег",
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "410 031 км",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: null, //пока ничего
-                            child: Text('Обновить'),
-                          ),
-                        ],
-                      ),
-                    ],    
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-  }
 
 //Заправки
 
-class FuelPage extends StatelessWidget {
-  const FuelPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Заправки'),
-        titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
-          fontSize: 28,
-          fontWeight: FontWeight.bold
-        )
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-      ),    
-    ),
-    floatingActionButton: FloatingActionButton(
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AddFuelPage(),
-          ),
-        );
-      },
-      child: const Icon(Icons.add, size: 31,),
-    ),
-  );
-  }
-}
 
 //ТО
 
-class MaintenancePage extends StatelessWidget {
-  const MaintenancePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ТО'),
-        titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
-          fontSize: 28,
-          fontWeight: FontWeight.bold
-        )
-      ),
-      body: const Center(
-        child: Text('Страница ТО'),
-      ),
-    );
-  }
-}
-
 //Ещё
 
-class MorePage extends StatelessWidget {
-  const MorePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ещё'),
-        titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
-          fontSize: 28,
-          fontWeight: FontWeight.bold
-        )
-      ),
-      body: const Center(
-        child: Text('Страница Ещё'),
-      ),
-    );
-  }
-}
 
-class AddFuelPage extends StatelessWidget {
-  const AddFuelPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        
-        title: const Text('Добавить заправку'),
-        titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 0, 0, 0),
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-        )
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 90,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Потом откроем камеру
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.camera_alt, size: 32),
-                      SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Сфотографировать чек',
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold,
-                          ),
-                          ),
-                          SizedBox(height: 4),
-                          Text("Данные будут распознаны автоматически",
-                            style: TextStyle(fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 15,),
-            SizedBox(
-              width: double.infinity,
-              height: 90,
-              child: ElevatedButton(
-                onPressed: () {}, 
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(16),
-                  ),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.edit, size: 32),
-                    SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ввести вручную',
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold,
-                        ),
-                        ),
-                        SizedBox(height: 4),
-                        Text("Самостоятельно указать данные заправки",
-                          style: TextStyle(fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ],
-        ),
-      ),
-    );
-  }
-}
