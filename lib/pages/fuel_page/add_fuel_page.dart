@@ -1,4 +1,5 @@
 import 'package:car_tracker/theme/app_theme.dart';
+import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class AddFuelPage extends StatelessWidget {
@@ -6,10 +7,11 @@ class AddFuelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         
-        title: const Text('Добавить заправку'),
+        title: Text(l10n.add_fuel_page),
         
       ),
       body: Padding(
@@ -32,21 +34,21 @@ class AddFuelPage extends StatelessWidget {
                     ),
                     
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.camera_alt, size: 32, color: AppTheme.primaryColor),
-                      SizedBox(width: 20),
+                      const Icon(Icons.camera_alt, size: 32, color: AppTheme.primaryColor),
+                      const SizedBox(width: 20),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Сфотографировать чек',
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textColor,
+                            l10n.fuel_page_photo_btn_h,
+                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textColor,
                           ),
                           ),
-                          SizedBox(height: 4),
-                          Text("Данные будут распознаны автоматически",
+                          const SizedBox(height: 4),
+                          Text(l10n.fuel_page_photo_btn_p,
                             style: TextStyle(fontSize: 13, color: AppTheme.textSecondaryColor
                           ),
                         ),
@@ -68,21 +70,21 @@ class AddFuelPage extends StatelessWidget {
                     borderRadius: BorderRadiusGeometry.circular(16),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.edit, size: 32, color: AppTheme.primaryColor),
-                    SizedBox(width: 20),
+                    const Icon(Icons.edit, size: 32, color: AppTheme.primaryColor),
+                    const SizedBox(width: 20),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ввести вручную',
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textColor
+                          l10n.fuel_page_manual_btn_h,
+                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textColor
                         ),
                         ),
-                        SizedBox(height: 4),
-                        Text("Самостоятельно указать данные заправки", 
+                        const SizedBox(height: 4),
+                        Text(l10n.fuel_page_manual_btn_p, 
                           style: TextStyle(fontSize: 13, color: AppTheme.textSecondaryColor
                         ),
                       ),

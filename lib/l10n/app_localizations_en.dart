@@ -13,7 +13,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home_page => 'Home';
 
   @override
-  String get fuel_page => 'Refill';
+  String get fuel_page => 'Fuel';
 
   @override
   String get maintenance_page => 'Maintenance';
@@ -26,6 +26,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get current_mileage => 'Current mileage';
+
+  @override
+  String get year_point => 'y.';
+
+  @override
+  String get km => 'km';
+
+  @override
+  String get mi => 'mi';
+
+  @override
+  String get settings => 'Settings';
 
   @override
   String get add_fuel_page => 'Add refill';
@@ -42,4 +54,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fuel_page_manual_btn_p => 'Manually enter refueling details';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get russian_lang => 'Russian';
+
+  @override
+  String get english_lang => 'English';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get light => 'Light';
+
+  @override
+  String get notifications => 'Notifications';
 }

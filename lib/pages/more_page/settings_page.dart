@@ -1,4 +1,5 @@
 import 'package:car_tracker/theme/app_theme.dart';
+import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -6,17 +7,18 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Настройки'),
+        title: Text(l10n.settings),
       ),
 
       body: ListView(
         children: [
           ListTile(
             leading: const Icon(Icons.language),
-            title: const Text('Язык'),
-            subtitle: const Text('Русский', style: TextStyle(color: AppTheme.textSecondaryColor)),
+            title: Text(l10n.language),
+            subtitle: Text(l10n.english_lang, style: TextStyle(color: AppTheme.textSecondaryColor)),
             trailing: const Icon(Icons.chevron_right),
             iconColor: AppTheme.textSecondaryColor,
             textColor: AppTheme.textColor,
@@ -27,8 +29,8 @@ class SettingsPage extends StatelessWidget {
 
           ListTile(
             leading: const Icon(Icons.palette),
-            title: const Text('Тема'),
-            subtitle: const Text('Светлая', style: TextStyle(color: AppTheme.textSecondaryColor),),
+            title: Text(l10n.theme),
+            subtitle: Text(l10n.light, style: TextStyle(color: AppTheme.textSecondaryColor),),
             trailing: const Icon(Icons.chevron_right),
             iconColor: AppTheme.textSecondaryColor,
             textColor: AppTheme.textColor,
@@ -40,7 +42,7 @@ class SettingsPage extends StatelessWidget {
 
           ListTile(
             leading: const Icon(Icons.notifications),
-            title: const Text('Уведомления'),
+            title: Text(l10n.notifications),
             trailing: const Icon(Icons.chevron_right),
             iconColor: AppTheme.textSecondaryColor,
             textColor: AppTheme.textColor,

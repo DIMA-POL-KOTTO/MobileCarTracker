@@ -28,6 +28,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get current_mileage => 'Текущий пробег';
 
   @override
+  String get year_point => 'г.';
+
+  @override
+  String get km => 'км';
+
+  @override
+  String get mi => 'миль';
+
+  @override
+  String get settings => 'Настройки';
+
+  @override
   String get add_fuel_page => 'Добавить заправку';
 
   @override
@@ -41,4 +53,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get fuel_page_manual_btn_p => 'Самостоятельно указать данные заправки';
+
+  @override
+  String get language => 'Язык';
+
+  @override
+  String get russian_lang => 'Русский';
+
+  @override
+  String get english_lang => 'Английский';
+
+  @override
+  String get theme => 'Тема';
+
+  @override
+  String get light => 'Светлая';
+
+  @override
+  String get notifications => 'Уведомления';
 }

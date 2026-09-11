@@ -1,4 +1,5 @@
 import 'package:car_tracker/theme/app_theme.dart';
+import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -6,9 +7,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Главная'),
+        title: Text(l10n.home_page),
         titleTextStyle: const TextStyle(
           color: AppTheme.textColor,
           fontSize: 28,
@@ -26,35 +28,35 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.directions_car),
-                        SizedBox(width: 10),
+                        const Icon(Icons.directions_car),
+                        const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               "Passat B5",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text("1999 г."),
+                              Text("1999 ${l10n.year_point}"),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        "Текущий пробег",
+                      Text(
+                        l10n.current_mileage,
                       ),
                       const SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text(
-                            "410 031 км",
+                            "410 031 ${l10n.km}",
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -62,7 +64,7 @@ class HomePage extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: null, //пока ничего
-                            child: Text('Обновить'),
+                            child: Text(l10n.update_btn),
                           ),
                         ],
                       ),

@@ -5,9 +5,19 @@
     "more_page": "Ещё",
     "update_btn": "Обновить",
     "current_mileage": "Текущий пробег",
+    "year_point": "г.",
+    "km": "км",
+    "mi": "миль",
+    "settings": "Настройки",
     "add_fuel_page": "Добавить заправку",
     "fuel_page_photo_btn_h": "Сфотографировать чек",
     "fuel_page_photo_btn_p": "Данные будут распознаны автоматически",
     "fuel_page_manual_btn_h": "Ввести вручную",
-    "fuel_page_manual_btn_p": "Самостоятельно указать данные заправки"
+    "fuel_page_manual_btn_p": "Самостоятельно указать данные заправки",
+    "language": "Язык",
+    "russian_lang": "Русский",
+    "english_lang": "Английский",
+    "theme": "Тема",
+    "light": "Светлая",
+    "notifications": "Уведомления"
 }

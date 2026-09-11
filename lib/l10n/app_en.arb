@@ -1,13 +1,23 @@
 {
     "home_page": "Home",
-    "fuel_page": "Refill",
+    "fuel_page": "Fuel",
     "maintenance_page": "Maintenance",
     "more_page": "More",
     "update_btn": "Update",
     "current_mileage": "Current mileage",
+    "year_point": "y.",
+    "km": "km",
+    "mi": "mi",
+    "settings": "Settings",
     "add_fuel_page": "Add refill",
     "fuel_page_photo_btn_h": "Take a photo of the receipt",
     "fuel_page_photo_btn_p": "The data will be recognized automatically",
     "fuel_page_manual_btn_h": "Enter manually",
-    "fuel_page_manual_btn_p": "Manually enter refueling details"
+    "fuel_page_manual_btn_p": "Manually enter refueling details",
+    "language": "Language",
+    "russian_lang": "Russian",
+    "english_lang": "English",
+    "theme": "Theme",
+    "light": "Light",
+    "notifications": "Notifications"
 }

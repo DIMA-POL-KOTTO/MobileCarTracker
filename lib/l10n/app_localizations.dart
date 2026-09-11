@@ -134,6 +134,30 @@ abstract class AppLocalizations {
   /// **'Текущий пробег'**
   String get current_mileage;
 
+  /// No description provided for @year_point.
+  ///
+  /// In ru, this message translates to:
+  /// **'г.'**
+  String get year_point;
+
+  /// No description provided for @km.
+  ///
+  /// In ru, this message translates to:
+  /// **'км'**
+  String get km;
+
+  /// No description provided for @mi.
+  ///
+  /// In ru, this message translates to:
+  /// **'миль'**
+  String get mi;
+
+  /// No description provided for @settings.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки'**
+  String get settings;
+
   /// No description provided for @add_fuel_page.
   ///
   /// In ru, this message translates to:
@@ -163,6 +187,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Самостоятельно указать данные заправки'**
   String get fuel_page_manual_btn_p;
+
+  /// No description provided for @language.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык'**
+  String get language;
+
+  /// No description provided for @russian_lang.
+  ///
+  /// In ru, this message translates to:
+  /// **'Русский'**
+  String get russian_lang;
+
+  /// No description provided for @english_lang.
+  ///
+  /// In ru, this message translates to:
+  /// **'Английский'**
+  String get english_lang;
+
+  /// No description provided for @theme.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тема'**
+  String get theme;
+
+  /// No description provided for @light.
+  ///
+  /// In ru, this message translates to:
+  /// **'Светлая'**
+  String get light;
+
+  /// No description provided for @notifications.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомления'**
+  String get notifications;
 }
 
 class _AppLocalizationsDelegate

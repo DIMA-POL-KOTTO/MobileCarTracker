@@ -60,6 +60,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -73,22 +74,22 @@ class _MainScreenState extends State<MainScreen> {
         selectedItemColor: AppTheme.primaryColor,
         unselectedItemColor: AppTheme.secondaryColor,
 
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Главная',
+            icon: const Icon(Icons.home),
+            label: l10n.home_page,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_gas_station),
-            label: 'Заправки',
+            icon: const Icon(Icons.local_gas_station),
+            label: l10n.fuel_page,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.build),
-            label: 'ТО',
+            icon: const Icon(Icons.build),
+            label: l10n.maintenance_page,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            label: 'Ещё',
+            icon: const Icon(Icons.more_horiz),
+            label: l10n.more_page,
           ),
         ],
       )
