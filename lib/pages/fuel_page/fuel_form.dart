@@ -44,12 +44,52 @@ class _FuelFormState extends State<FuelForm> {
           children: [
             TextField(
               controller: _stationController,
-              
               decoration: InputDecoration(
                 labelText: l10n.fuel_station,
               ),
             ),
-            
+            SizedBox(height: 16,),
+            TextField(
+              controller: _dateController,
+              decoration: InputDecoration(
+                labelText: l10n.fuel_date,
+              ),
+            ),
+            SizedBox(height: 16,),
+            TextField(
+              controller: _fuelTypeController,
+              decoration: InputDecoration(
+                labelText: l10n.fuel_type,
+              ),
+            ),
+            SizedBox(height: 16,),
+            TextField(
+              controller: _amountController,
+              decoration: InputDecoration(
+                labelText: l10n.fuel_amount,
+              ),
+            ),
+            SizedBox(height: 16,),
+            TextField(
+              controller: _priceController,
+              decoration: InputDecoration(
+                labelText: l10n.fuel_price,
+              ),
+            ),
+            SizedBox(height: 16,),
+            TextField(
+              controller: _totalCostController,
+              decoration: InputDecoration(
+                labelText: l10n.fuel_total_cost,
+              ),
+            ),
+            SizedBox(height: 16,),
+            TextField(
+              controller: _mileageController,
+              decoration: InputDecoration(
+                labelText: l10n.fuel_mileage,
+              ),
+            ),
           ],
         ),
       )

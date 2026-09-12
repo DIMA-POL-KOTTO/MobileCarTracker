@@ -61,6 +61,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fuel_station => 'АЗС';
 
   @override
+  String get fuel_date => 'Дата';
+
+  @override
+  String get fuel_type => 'Топливо';
+
+  @override
+  String get fuel_amount => 'Количество';
+
+  @override
+  String get fuel_price => 'Цена за';
+
+  @override
+  String get fuel_total_cost => 'Стоимость';
+
+  @override
+  String get fuel_mileage => 'Пробег';
+
+  @override
   String get language => 'Язык';
 
   @override

@@ -59,7 +59,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fuel_form => 'Refill data';
 
   @override
-  String get fuel_station => 'Fuel station';
+  String get fuel_station => 'Station';
+
+  @override
+  String get fuel_date => 'Date';
+
+  @override
+  String get fuel_type => 'Fuel';
+
+  @override
+  String get fuel_amount => 'Amount';
+
+  @override
+  String get fuel_price => 'Price per';
+
+  @override
+  String get fuel_total_cost => 'Cost';
+
+  @override
+  String get fuel_mileage => 'Mileage';
 
   @override
   String get language => 'Language';

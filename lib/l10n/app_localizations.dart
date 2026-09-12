@@ -200,6 +200,42 @@ abstract class AppLocalizations {
   /// **'АЗС'**
   String get fuel_station;
 
+  /// No description provided for @fuel_date.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дата'**
+  String get fuel_date;
+
+  /// No description provided for @fuel_type.
+  ///
+  /// In ru, this message translates to:
+  /// **'Топливо'**
+  String get fuel_type;
+
+  /// No description provided for @fuel_amount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Количество'**
+  String get fuel_amount;
+
+  /// No description provided for @fuel_price.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цена за'**
+  String get fuel_price;
+
+  /// No description provided for @fuel_total_cost.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стоимость'**
+  String get fuel_total_cost;
+
+  /// No description provided for @fuel_mileage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пробег'**
+  String get fuel_mileage;
+
   /// No description provided for @language.
   ///
   /// In ru, this message translates to:

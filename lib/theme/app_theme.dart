@@ -5,15 +5,20 @@ class AppTheme {
   static const Color secondaryColor = Color.fromARGB(255, 153, 153, 153);
   static const Color textColor = Colors.black;
   static const Color textSecondaryColor = Color.fromARGB(255, 72, 72, 72);
-  static const Color backgroundColor = Color.fromARGB(255, 247, 247, 247);
-  static const Color cardColor = Colors.white;
+  static const Color backgroundColor = Colors.white;
 
   static const InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+    labelStyle: TextStyle(
+      color: secondaryColor,
+      fontSize: 14,
+    ),
+
     border: OutlineInputBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(16.0),
       ),
       borderSide: BorderSide(color: secondaryColor, width: 1.5,
+      
       ),
     ),
 
@@ -32,6 +37,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: backgroundColor,
     inputDecorationTheme: inputDecorationTheme,
+    
   );
 }
 
