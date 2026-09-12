@@ -55,6 +55,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fuel_page_manual_btn_p => 'Самостоятельно указать данные заправки';
 
   @override
+  String get fuel_form => 'Данные заправки';
+
+  @override
+  String get fuel_station => 'АЗС';
+
+  @override
   String get language => 'Язык';
 
   @override

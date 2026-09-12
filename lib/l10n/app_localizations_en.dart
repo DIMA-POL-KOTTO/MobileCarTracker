@@ -56,6 +56,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fuel_page_manual_btn_p => 'Manually enter refueling details';
 
   @override
+  String get fuel_form => 'Refill data';
+
+  @override
+  String get fuel_station => 'Fuel station';
+
+  @override
   String get language => 'Language';
 
   @override

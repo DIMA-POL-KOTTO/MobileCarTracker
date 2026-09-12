@@ -14,6 +14,8 @@
     "fuel_page_photo_btn_p": "The data will be recognized automatically",
     "fuel_page_manual_btn_h": "Enter manually",
     "fuel_page_manual_btn_p": "Manually enter refueling details",
+    "fuel_form": "Refill data",
+    "fuel_station": "Fuel station",
     "language": "Language",
     "russian_lang": "Russian",
     "english_lang": "English",

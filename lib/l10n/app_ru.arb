@@ -14,6 +14,8 @@
     "fuel_page_photo_btn_p": "Данные будут распознаны автоматически",
     "fuel_page_manual_btn_h": "Ввести вручную",
     "fuel_page_manual_btn_p": "Самостоятельно указать данные заправки",
+    "fuel_form": "Данные заправки",
+    "fuel_station": "АЗС",
     "language": "Язык",
     "russian_lang": "Русский",
     "english_lang": "Английский",

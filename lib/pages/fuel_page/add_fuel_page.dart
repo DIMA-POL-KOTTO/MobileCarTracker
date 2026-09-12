@@ -1,3 +1,4 @@
+import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,14 @@ class AddFuelPage extends StatelessWidget {
               width: double.infinity,
               height: 90,
               child: ElevatedButton(
-                onPressed: () {}, 
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FuelForm(),
+                    ),
+                  );
+                }, 
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   shape: RoundedRectangleBorder(

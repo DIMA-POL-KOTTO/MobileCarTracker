@@ -188,6 +188,18 @@ abstract class AppLocalizations {
   /// **'Самостоятельно указать данные заправки'**
   String get fuel_page_manual_btn_p;
 
+  /// No description provided for @fuel_form.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные заправки'**
+  String get fuel_form;
+
+  /// No description provided for @fuel_station.
+  ///
+  /// In ru, this message translates to:
+  /// **'АЗС'**
+  String get fuel_station;
+
   /// No description provided for @language.
   ///
   /// In ru, this message translates to:
