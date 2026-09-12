@@ -11,14 +11,27 @@ void main() {
   runApp(const CarCareApp());
 }
 
-class CarCareApp extends StatelessWidget {
+class CarCareApp extends StatefulWidget {
   const CarCareApp({super.key});
+
+  @override
+  State<CarCareApp> createState() => _CarCareAppState();
+}
+
+class _CarCareAppState extends State<CarCareApp> {
+  Locale? _locale;
+  void changeLanguage(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CarCare',
+      locale: _locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -29,13 +42,16 @@ class CarCareApp extends StatelessWidget {
         Locale('ru', ''), // Русский
         Locale('en', ''), // Английский
       ],
-      home: const MainScreen(),
+      home: MainScreen(
+        onChangeLanguage: changeLanguage,
+      ),
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final void Function(Locale) onChangeLanguage;
+  const MainScreen({super.key, required this.onChangeLanguage});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -44,13 +60,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-
-  final List<Widget> _pages = const [
-    HomePage(),
-    FuelPage(),
-    MaintenancePage(),
-    MorePage(),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,8 +70,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final List<Widget> pages = [
+      const HomePage(),
+      const FuelPage(),
+      const MaintenancePage(),
+      MorePage(onChangeLanguage: widget.onChangeLanguage),
+    ];
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
 

@@ -4,7 +4,8 @@ import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class MorePage extends StatelessWidget {
-  const MorePage({super.key});
+  final void Function(Locale) onChangeLanguage;
+  const MorePage({super.key, required this.onChangeLanguage});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,9 @@ class MorePage extends StatelessWidget {
               Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
+                  builder: (context) => SettingsPage(
+                    onChangeLanguage: onChangeLanguage,
+                  ),
                 ),
               );
             },
