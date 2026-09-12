@@ -12,7 +12,7 @@ class FuelForm extends StatefulWidget {
 class _FuelFormState extends State<FuelForm> {
   final TextEditingController _stationController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  FuelType _fuelType = FuelType.diesel;
+  final FuelType _fuelType = FuelType.diesel;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _totalCostController = TextEditingController();

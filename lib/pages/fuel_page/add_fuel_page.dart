@@ -1,6 +1,7 @@
 import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
 class AddFuelPage extends StatelessWidget {
@@ -25,8 +26,15 @@ class AddFuelPage extends StatelessWidget {
                 width: double.infinity,
                 height: 90,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Потом откроем камеру
+                  onPressed: () async {
+                    final picker = ImagePicker();
+
+                    final image = await picker.pickImage(source: ImageSource.camera);
+                    if (image == null) {
+                      return;
+                    }
+                    print('Фото чека: ${image.path}');
+                  
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
