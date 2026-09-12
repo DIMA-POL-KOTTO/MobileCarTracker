@@ -44,6 +44,7 @@ class _FuelFormState extends State<FuelForm> {
           children: [
             TextField(
               controller: _stationController,
+              
               decoration: InputDecoration(
                 labelText: l10n.fuel_station,
               ),

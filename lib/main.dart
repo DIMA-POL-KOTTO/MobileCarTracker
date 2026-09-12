@@ -31,6 +31,7 @@ class _CarCareAppState extends State<CarCareApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CarCare',
+      theme: AppTheme.lightTheme,
       locale: _locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
