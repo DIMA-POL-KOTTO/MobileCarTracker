@@ -2,6 +2,8 @@ import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tesseract_ocr/ocr_engine_config.dart';
+import 'package:tesseract_ocr/tesseract_ocr.dart';
 import 'package:flutter/material.dart';
 
 class AddFuelPage extends StatelessWidget {
@@ -33,8 +35,18 @@ class AddFuelPage extends StatelessWidget {
                     if (image == null) {
                       return;
                     }
-                    print('Фото чека: ${image.path}');
-                  
+                    final text = await TesseractOcr.extractText(
+                      image.path,
+                      config: OCRConfig(
+                        language: 'rus',
+                        
+                      ),
+                    );
+
+                    print('OCR TEXT:');
+                    print(text);
+                    
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
