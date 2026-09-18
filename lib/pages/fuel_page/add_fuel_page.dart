@@ -4,11 +4,19 @@ import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tesseract_ocr/ocr_engine_config.dart';
 import 'package:tesseract_ocr/tesseract_ocr.dart';
+import 'package:car_tracker/services/img_preprocessor.dart';
 import 'package:flutter/material.dart';
 
-class AddFuelPage extends StatelessWidget {
+class AddFuelPage extends StatefulWidget {
   const AddFuelPage({super.key});
 
+  @override
+  State<AddFuelPage> createState() => _AddFuelPageState();
+}
+
+class _AddFuelPageState extends State<AddFuelPage> {
+  String? _procImgPath;
+  String? _orcText;
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -35,13 +43,20 @@ class AddFuelPage extends StatelessWidget {
                     if (image == null) {
                       return;
                     }
+                    final procPath = await preprocessImage(image.path);
+                    setState(() {
+                      _procImgPath = procPath;
+                    });
                     final text = await TesseractOcr.extractText(
-                      image.path,
+                      procPath,
                       config: OCRConfig(
                         language: 'rus',
                         
                       ),
                     );
+                    setState(() {
+                      _orcText = text;
+                    });
 
                     print('OCR TEXT:');
                     print(text);
@@ -116,15 +131,21 @@ class AddFuelPage extends StatelessWidget {
                           style: TextStyle(fontSize: 13, color: AppTheme.textSecondaryColor
                         ),
                       ),
+      
                     ],
                   ),
                 ],
               ),
             ),
           ),
+          
           ],
         ),
       ),
     );
+    
   }
+  
 }
+
+  
