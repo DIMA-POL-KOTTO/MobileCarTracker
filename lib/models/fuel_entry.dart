@@ -1,13 +1,13 @@
 import 'package:car_tracker/models/fuel_type.dart';
 
 class FuelEntry {
-  final String station;
-  final DateTime date;
-  final FuelType fuelType;
-  final double amount;
-  final double price;
-  final double totalCost;
-  final int? mileage;
+  final String station; //АЗС
+  final DateTime date; //дата
+  final FuelType fuelType; // тип топл
+  final double amount; // кол-во в л
+  final double price; //цена за литр
+  final double totalCost; //итого
+  final int? mileage; // пробег
 
   FuelEntry({
     required this.station,

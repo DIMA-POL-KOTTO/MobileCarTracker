@@ -1,5 +1,6 @@
 import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/services/google_vision.dart';
+import 'package:car_tracker/services/receipt_parser.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
@@ -76,10 +77,22 @@ class AddFuelPage extends StatelessWidget {
                       print('========== GOOGLE VISION ==========');
                       print(text);
                       print('===================================');
+                      final parsed = ReceiptParser.parse(text);
+                      if (!context.mounted) {
+                        return;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FuelForm(
+                            initialData: parsed,
+                          ),
+                        ),
+                      );
                     } catch (e) {
                       print('ОШИБКА Google Vision');
                     }
-                  
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

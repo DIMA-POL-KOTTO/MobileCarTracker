@@ -1,10 +1,12 @@
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:car_tracker/models/fuel_type.dart';
+import 'package:car_tracker/services/models/parsed_receipt.dart';
 import 'package:flutter/material.dart';
 
 class FuelForm extends StatefulWidget {
-  const FuelForm({super.key});
+  final ParsedReceipt? initialData;
+  const FuelForm({super.key, this.initialData});
 
   @override
   State<FuelForm> createState() => _FuelFormState();
@@ -12,18 +14,34 @@ class FuelForm extends StatefulWidget {
 class _FuelFormState extends State<FuelForm> {
   final TextEditingController _stationController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final FuelType _fuelType = FuelType.diesel;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _totalCostController = TextEditingController();
   final TextEditingController _mileageController = TextEditingController();
   DateTime? _selectedDate;
+  FuelType? _fuelType;
+
+  @override
+  void initState() {
+    super.initState();
+    final data = widget.initialData;
+    if (data != null) {
+      _stationController.text = data.station ?? '';
+      _amountController.text = data.amount?.toString() ?? '';
+      _priceController.text = data.price?.toString() ?? '';
+      _totalCostController.text = data.totalCost?.toString() ?? '';
+      _fuelType = data.fuelType;
+      if (data.date != null) {
+        _selectedDate = data.date;
+        _dateController.text = '${data.date!.day.toString().padLeft(2, '0')}.${data.date!.month.toString().padLeft(2, '0')}.${data.date!.year}';
+      }
+    }
+  }
 
   @override
   void dispose() {
     _stationController.dispose();
     _dateController.dispose();
-
     _amountController.dispose();
     _priceController.dispose();
     _totalCostController.dispose();
@@ -69,20 +87,26 @@ class _FuelFormState extends State<FuelForm> {
                 if (pickedDate != null) {
                   setState(() {
                     _selectedDate = pickedDate;
-                    _dateController.text =
-                        '${pickedDate.day.toString().padLeft(2, '0')}.'
-                        '${pickedDate.month.toString().padLeft(2, '0')}.'
-                        '${pickedDate.year}';
+                    _dateController.text = '${pickedDate.day.toString().padLeft(2, '0')}.${pickedDate.month.toString().padLeft(2, '0')}.${pickedDate.year}';
                   });
                 }
               }
             ),
             SizedBox(height: 16,),
-            TextField(
-              
-              decoration: InputDecoration(
-                labelText: l10n.fuel_type,
-              ),
+            DropdownButtonFormField<FuelType>(
+              initialValue: _fuelType,
+              decoration: InputDecoration(labelText: l10n.fuel_type),
+              items: FuelType.values.map((type) {
+                return DropdownMenuItem<FuelType>(
+                  value: type,
+                  child: Text(_fuelTypeName(type)),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _fuelType = value;
+                });
+              },
             ),
             SizedBox(height: 16,),
             TextField(
@@ -93,21 +117,51 @@ class _FuelFormState extends State<FuelForm> {
             ),
             SizedBox(height: 16,),
             TextField(
+              controller: _amountController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(
+                labelText: l10n.fuel_amount,
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 16,),
+            TextField(
               controller: _priceController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(
                 labelText: l10n.fuel_price,
               ),
+              onChanged: (_) {
+                setState(() {});
+              },
             ),
             SizedBox(height: 16,),
             TextField(
               controller: _totalCostController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(
                 labelText: l10n.fuel_total_cost,
               ),
+              onChanged: (_) {
+                setState(() {});
+              },
             ),
-            SizedBox(height: 16,),
+
+            _buildTotalCostWarning(),
+
+            const SizedBox(height: 16),
+
             TextField(
               controller: _mileageController,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: l10n.fuel_mileage,
               ),
@@ -115,6 +169,66 @@ class _FuelFormState extends State<FuelForm> {
           ],
         ),
       )
+    );
+  }
+
+  String _fuelTypeName(FuelType type) {
+    switch (type) {
+      case FuelType.petrol92:
+        return 'АИ-92';
+      case FuelType.petrol95:
+        return 'АИ-95';
+      case FuelType.petrol98:
+        return 'АИ-98';
+      case FuelType.petrol100:
+        return 'АИ-100';
+      case FuelType.diesel:
+        return 'Дизель';
+      case FuelType.gas:
+        return 'Газ';
+      case FuelType.electric:
+        return 'Электро';
+    }
+  }
+
+  Widget _buildTotalCostWarning() {
+    final calculated = calculatedTotalCost;
+    final scanned = totalCost;
+
+    if (calculated == null || scanned == null) {
+      return const SizedBox.shrink();
+    }
+
+    final difference = (calculated - scanned).abs();
+
+    // Небольшая погрешность допустима из-за округления.
+    if (difference <= 0.01) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Внимание: сумма по количеству и цене '
+              '(${calculated.toStringAsFixed(2)}) '
+              'не совпадает с суммой на чеке '
+              '(${scanned.toStringAsFixed(2)}).',
+              style: const TextStyle(
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -136,7 +250,16 @@ class _FuelFormState extends State<FuelForm> {
     );
   }
 
+  double? get calculatedTotalCost {
+    if (amount == null || price == null) {
+      return null;
+    }
+
+    return amount! * price!;
+  }
+
   int? get mileage {
     return int.tryParse(_mileageController.text);
   }
+
 }
