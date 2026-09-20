@@ -25,7 +25,7 @@ class ReceiptParser {
           organization = '$organization${lines[i + 1]}';
         }
       }  
-      if (line.contains('МАЗС')) {
+      if (line.contains('АЗС')) {
         station = line; 
       }
     }

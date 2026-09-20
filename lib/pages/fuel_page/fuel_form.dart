@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class FuelForm extends StatefulWidget {
   final ParsedReceipt? initialData;
-  const FuelForm({super.key, this.initialData});
+  final bool isEditing;
+  const FuelForm({super.key, this.initialData, this.isEditing = false});
 
   @override
   State<FuelForm> createState() => _FuelFormState();
@@ -160,10 +161,63 @@ class _FuelFormState extends State<FuelForm> {
                 labelText: l10n.fuel_mileage,
               ),
             ),
+            SizedBox(height: 16,),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(foregroundColor: AppTheme.primaryColor,
+                      side: const BorderSide(color: AppTheme.primaryColor)),
+                    child: const Text('Отмена'),
+                    
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    
+                    onPressed: _save,
+                    style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, foregroundColor: AppTheme.backgroundColor),
+                    child: Text(
+                      widget.isEditing ? 'Сохранить' : 'Добавить',
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
-      )
+      ),
+      
+        floatingActionButton: FloatingActionButton(
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: AppTheme.backgroundColor,
+        onPressed: () {
+          
+        },
+        child: const Icon(Icons.camera_alt, size: 31,),
+      ),
     );
+  }
+
+  void _save(){
+    final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
+    final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
+    final totalCost = double.tryParse(_totalCostController.text.replaceAll(',', '.'));
+    final mileage = int.tryParse(_mileageController.text);
+    if (_stationController.text.trim().isEmpty || _selectedDate == null || amount == null || price == null || totalCost == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Заполните обязательные поля'),
+          duration:Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+    Navigator.pop(context);
   }
 
   String _fuelTypeName(FuelType type) {
@@ -255,5 +309,7 @@ class _FuelFormState extends State<FuelForm> {
   int? get mileage {
     return int.tryParse(_mileageController.text);
   }
+
+  
 
 }

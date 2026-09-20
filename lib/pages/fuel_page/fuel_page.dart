@@ -43,20 +43,20 @@ class _FuelPageState extends State<FuelPage> {
         padding: EdgeInsets.all(16.0),
         child: _buildScanList(),
       ),    
-    floatingActionButton: FloatingActionButton(
-      backgroundColor: AppTheme.primaryColor,
-      foregroundColor: AppTheme.backgroundColor,
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AddFuelPage(),
-          ),
-        );
-      },
-      child: const Icon(Icons.add, size: 31,),
-    ),
-  );
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: AppTheme.backgroundColor,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddFuelPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, size: 31,),
+      ),
+    );
   }
 
   Widget _buildScanList() {
@@ -140,6 +140,6 @@ class _FuelPageState extends State<FuelPage> {
     if (scan.result == null) {
       return;
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => FuelForm(initialData: scan.result,),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FuelForm(initialData: scan.result, isEditing: true,),));
   }
 }

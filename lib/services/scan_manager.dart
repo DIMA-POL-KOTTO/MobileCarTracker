@@ -65,6 +65,9 @@ class ScanManager extends ChangeNotifier{
       parsed.totalCost == null) {
       return true;
     }
+    if (!parsed.station.toString().contains("АЗС №")) {
+      return true;
+    }
     final calculatedTotal = parsed.amount! * parsed.price!;
     final difference = (calculatedTotal - parsed.totalCost!).abs();
     return difference > 0.01;
