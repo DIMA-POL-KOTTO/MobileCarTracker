@@ -108,13 +108,7 @@ class _FuelFormState extends State<FuelForm> {
                 });
               },
             ),
-            SizedBox(height: 16,),
-            TextField(
-              controller: _amountController,
-              decoration: InputDecoration(
-                labelText: l10n.fuel_amount,
-              ),
-            ),
+           
             SizedBox(height: 16,),
             TextField(
               controller: _amountController,

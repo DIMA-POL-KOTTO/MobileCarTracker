@@ -6,6 +6,7 @@ import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:car_tracker/services/scan_manager.dart';
 
 void main() {
   runApp(const CarCareApp());
@@ -61,6 +62,23 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  final ScanManager _scanManager = ScanManager.instance;
+
+  @override
+  void initState(){
+    super.initState();
+    _scanManager.addListener(_onScanChanged);
+  }
+
+  @override
+  void dispose() {
+    _scanManager.removeListener(_onScanChanged);
+    super.dispose();
+  }
+
+  void _onScanChanged() {
+    setState(() {});
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -77,8 +95,13 @@ class _MainScreenState extends State<MainScreen> {
       const MaintenancePage(),
       MorePage(onChangeLanguage: widget.onChangeLanguage),
     ];
+    final processingCount = _scanManager.scans.where((scan) => scan.status == ScanStatus.processing).length;
     return Scaffold(
-      body: pages[_selectedIndex],
+      body: Stack(children: [
+        pages[_selectedIndex],
+        if (processingCount > 0)
+          Positioned(right: 16, bottom: 16, child: _buildScanIndicator(processingCount),)
+      ],),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
 
@@ -111,7 +134,27 @@ class _MainScreenState extends State<MainScreen> {
       )
     );
   }
-}
+
+  Widget _buildScanIndicator(int count) {
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(30),
+      color: AppTheme.primaryColor,
+      child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), border: Border.all(color: AppTheme.primaryColor),),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.5,),),
+          const SizedBox(width: 10,),
+          Text('Обработка: $count',
+          style: const TextStyle(color: AppTheme.textColor),),
+        ],
+      ),
+    ),
+    );
+  }
+} 
 
 
 
