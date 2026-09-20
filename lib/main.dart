@@ -95,7 +95,6 @@ class _MainScreenState extends State<MainScreen> {
       const MaintenancePage(),
       MorePage(onChangeLanguage: widget.onChangeLanguage),
     ];
-    final processingCount = _scanManager.scans.where((scan) => scan.status == ScanStatus.processing).length;
     return Scaffold(
       body: Stack(children: [
         pages[_selectedIndex],

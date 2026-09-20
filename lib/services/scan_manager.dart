@@ -13,7 +13,7 @@ enum ScanStatus {
 
 class ReceiptScan {
   final String id;
-  final String imagePath;
+  String imagePath;
   final DateTime createdAt;
   ScanStatus status;
   ParsedReceipt? result;
@@ -33,13 +33,17 @@ class ScanManager extends ChangeNotifier{
   static final ScanManager instance = ScanManager._();
   final List<ReceiptScan> scans = [];
   final GoogleVisionService _vision = GoogleVisionService(apiKey: ApiKeys.googleVision);
-  Future<ReceiptScan> startScan(String imagePath) async {
-    final scan = ReceiptScan(id: DateTime.now().microsecondsSinceEpoch.toString(), imagePath: imagePath, createdAt: DateTime.now(), status: ScanStatus.processing);
-    scans.insert(0, scan);
+  Future<ParsedReceipt> recognizeReceipt (String imagePath) async {
+    final text = await _vision.recognizeText(imagePath);
+    return ReceiptParser.parse(text);
+  } 
+  Future<void> processScan(ReceiptScan scan, String imagePath) async {
+    scan.status = ScanStatus.processing;
+    scan.error = null;
     notifyListeners();
     try {
-      final text = await _vision.recognizeText(imagePath);
-      final parsed = ReceiptParser.parse(text);
+      scan.imagePath = imagePath;
+      final parsed = await recognizeReceipt(imagePath);
       scan.result = parsed;
       if (_hasProblems(parsed)) {
         scan.status = ScanStatus.needsReview;
@@ -47,16 +51,20 @@ class ScanManager extends ChangeNotifier{
       else {
         scan.status = ScanStatus.ready;
       }
-      notifyListeners();
     }
     catch (e) {
       scan.status = ScanStatus.error;
       scan.error = e.toString();
-      notifyListeners();
     }
+    notifyListeners();
+  }
+  ReceiptScan createScan(String imagePath) {
+    final scan = ReceiptScan(id: DateTime.now().microsecondsSinceEpoch.toString(), imagePath: imagePath, createdAt: DateTime.now(), status: ScanStatus.processing);
+    scans.insert(0, scan);
+    notifyListeners();
+    processScan(scan, imagePath);
     return scan;
   }
-
   bool _hasProblems(ParsedReceipt parsed) {
     if (parsed.station == null || parsed.date == null ||
       parsed.fuelType == null ||

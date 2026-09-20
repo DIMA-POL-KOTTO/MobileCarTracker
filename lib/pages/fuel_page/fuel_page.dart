@@ -140,6 +140,6 @@ class _FuelPageState extends State<FuelPage> {
     if (scan.result == null) {
       return;
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => FuelForm(initialData: scan.result, isEditing: true,),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FuelForm(initialData: scan.result, isEditing: true, scan: scan,),));
   }
 }

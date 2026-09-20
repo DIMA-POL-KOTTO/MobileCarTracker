@@ -1,13 +1,16 @@
+import 'package:car_tracker/services/scan_manager.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:car_tracker/models/fuel_type.dart';
 import 'package:car_tracker/services/models/parsed_receipt.dart';
 import 'package:flutter/material.dart';
+import 'package:car_tracker/services/image_picker.dart';
 
 class FuelForm extends StatefulWidget {
   final ParsedReceipt? initialData;
   final bool isEditing;
-  const FuelForm({super.key, this.initialData, this.isEditing = false});
+  final ReceiptScan? scan;
+  const FuelForm({super.key, this.initialData, this.isEditing = false, this.scan});
 
   @override
   State<FuelForm> createState() => _FuelFormState();
@@ -53,7 +56,6 @@ class _FuelFormState extends State<FuelForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.fuel_form),
@@ -195,10 +197,24 @@ class _FuelFormState extends State<FuelForm> {
         floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: AppTheme.backgroundColor,
-        onPressed: () {
-          
-        },
         child: const Icon(Icons.camera_alt, size: 31,),
+        onPressed: () async {
+          final image = await ImagePickerService().pickImage(context);
+          if (image == null) {
+            return;
+          }  
+          if (widget.scan != null) {
+            await ScanManager.instance.processScan(widget.scan!, image);
+            if (!mounted) {
+              return;
+            }
+            final result = widget.scan!.result;
+            if (result != null) {
+              _fillFromParsedReceipt(result);
+            }
+          }
+        },
+        
       ),
     );
   }
@@ -242,18 +258,13 @@ class _FuelFormState extends State<FuelForm> {
   Widget _buildTotalCostWarning() {
     final calculated = calculatedTotalCost;
     final scanned = totalCost;
-
     if (calculated == null || scanned == null) {
       return const SizedBox.shrink();
     }
-
     final difference = (calculated - scanned).abs();
-
-    // Небольшая погрешность допустима из-за округления.
     if (difference <= 0.01) {
       return const SizedBox.shrink();
     }
-
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Row(
@@ -310,6 +321,30 @@ class _FuelFormState extends State<FuelForm> {
     return int.tryParse(_mileageController.text);
   }
 
-  
+  void _fillFromParsedReceipt(ParsedReceipt data) {
+  setState(() {
+    _stationController.text = data.station ?? '';
+
+    _amountController.text =
+        data.amount?.toString() ?? '';
+
+    _priceController.text =
+        data.price?.toString() ?? '';
+
+    _totalCostController.text =
+        data.totalCost?.toString() ?? '';
+
+    _fuelType = data.fuelType;
+
+    if (data.date != null) {
+      _selectedDate = data.date;
+
+      _dateController.text =
+          '${data.date!.day.toString().padLeft(2, '0')}.'
+          '${data.date!.month.toString().padLeft(2, '0')}.'
+          '${data.date!.year}';
+    }
+  });
+}
 
 }

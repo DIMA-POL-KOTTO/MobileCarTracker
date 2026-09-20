@@ -2,44 +2,17 @@ import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/services/scan_manager.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:car_tracker/services/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddFuelPage extends StatelessWidget {
   const AddFuelPage({super.key});
 
-  Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
-    return showModalBottomSheet<ImageSource>(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Камера'),
-                onTap: () {
-                  Navigator.pop(context, ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Галерея'),
-                onTap: () {
-                  Navigator.pop(context, ImageSource.gallery);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final ImagePickerService imagePickerService = ImagePickerService();
     return Scaffold(
       appBar: AppBar(
         
@@ -57,17 +30,11 @@ class AddFuelPage extends StatelessWidget {
                 height: 90,
                 child: ElevatedButton(
                   onPressed: () async {
-                    final source = await _showImageSourceDialog(context);
-                    if (source == null) {
-                      return;
-                    }
-                    final picker = ImagePicker();
-
-                    final image = await picker.pickImage(source: source);
+                    final image = await imagePickerService.pickImage(context);
                     if (image == null) {
                       return;
                     }
-                    ScanManager.instance.startScan(image.path);
+                    ScanManager.instance.createScan(image);
                     
                   },
                   style: ElevatedButton.styleFrom(
