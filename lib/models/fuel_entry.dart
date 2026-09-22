@@ -18,4 +18,26 @@ class FuelEntry {
     required this.totalCost,
     this.mileage,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'station': station,
+      'date': date.toIso8601String(),
+      'fuelType': fuelType.name,
+      'amount': amount,
+      'price': price,
+      'totalCost': totalCost,
+      'mileage': mileage,
+    };
+  }
+
+  factory FuelEntry.fromJson(Map<String, dynamic> json) {
+    return FuelEntry(station: json['station'], 
+      date: DateTime.parse(json['date']), 
+      fuelType: FuelType.values.firstWhere((type) => type.name == json['fuelType']), 
+      amount: (json['amount'] as num).toDouble(), 
+      price: (json['price'] as num).toDouble(), 
+      totalCost: (json['totalCost'] as num).toDouble(), 
+      mileage: json['mileage']);
+  }
 }

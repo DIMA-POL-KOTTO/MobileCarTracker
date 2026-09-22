@@ -1,10 +1,10 @@
 import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
+import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
 import 'package:car_tracker/services/scan_manager.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:car_tracker/services/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddFuelPage extends StatelessWidget {
   const AddFuelPage({super.key});
@@ -31,11 +31,14 @@ class AddFuelPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     final image = await imagePickerService.pickImage(context);
+                    
                     if (image == null) {
                       return;
                     }
-                    ScanManager.instance.createScan(image);
+                    if (!context.mounted) return;
                     
+                    ScanManager.instance.createScan(image);
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

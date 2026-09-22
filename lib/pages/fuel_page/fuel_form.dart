@@ -5,6 +5,9 @@ import 'package:car_tracker/models/fuel_type.dart';
 import 'package:car_tracker/services/models/parsed_receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/services/image_picker.dart';
+import 'package:car_tracker/models/fuel_entry.dart';
+import 'package:car_tracker/services/fuel_manager.dart';
+import 'package:car_tracker/utils.dart';
 
 class FuelForm extends StatefulWidget {
   final ParsedReceipt? initialData;
@@ -102,7 +105,7 @@ class _FuelFormState extends State<FuelForm> {
               items: FuelType.values.map((type) {
                 return DropdownMenuItem<FuelType>(
                   value: type,
-                  child: Text(_fuelTypeName(type)),
+                  child: Text(fuelTypeName(type)),
                 );
               }).toList(),
               onChanged: (value) {
@@ -219,7 +222,7 @@ class _FuelFormState extends State<FuelForm> {
     );
   }
 
-  void _save(){
+  Future<void> _save() async {
     final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
     final totalCost = double.tryParse(_totalCostController.text.replaceAll(',', '.'));
@@ -233,26 +236,24 @@ class _FuelFormState extends State<FuelForm> {
       );
       return;
     }
-    Navigator.pop(context);
-  }
-
-  String _fuelTypeName(FuelType type) {
-    switch (type) {
-      case FuelType.petrol92:
-        return 'АИ-92';
-      case FuelType.petrol95:
-        return 'АИ-95';
-      case FuelType.petrol98:
-        return 'АИ-98';
-      case FuelType.petrol100:
-        return 'АИ-100';
-      case FuelType.diesel:
-        return 'Дизель';
-      case FuelType.gas:
-        return 'Газ';
-      case FuelType.electric:
-        return 'Электро';
+    final entry = FuelEntry(
+      station: _stationController.text.trim(),
+      date: _selectedDate!,
+      fuelType: _fuelType!,
+      amount: amount,
+      price: price,
+      totalCost: totalCost,
+      mileage: mileage,
+    );
+    await FuelManager.instance.add(entry);
+    if (widget.scan != null) {
+      ScanManager.instance.scans.remove(widget.scan);
+      ScanManager.instance.notifyListeners();
     }
+    if (!mounted) {
+      return;
+    }
+    Navigator.pop(context);
   }
 
   Widget _buildTotalCostWarning() {
