@@ -237,6 +237,7 @@ class _FuelFormState extends State<FuelForm> {
       return;
     }
     final entry = FuelEntry(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
       station: _stationController.text.trim(),
       date: _selectedDate!,
       fuelType: _fuelType!,

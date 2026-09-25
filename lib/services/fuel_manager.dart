@@ -45,4 +45,10 @@ class FuelManager extends ChangeNotifier {
         .toList();
     await prefs.setStringList(_storageKey, data);
   }
+
+  Future<void> deleteEntries(Set <String> ids) async {
+    entries.removeWhere((entry) => ids.contains(entry.id));
+    await _saveToStorage();
+    notifyListeners();
+  }
 }

@@ -18,6 +18,9 @@ class FuelPage extends StatefulWidget {
 class _FuelPageState extends State<FuelPage> {
   final ScanManager _scanManager = ScanManager.instance;
   final FuelManager _fuelManager = FuelManager.instance;
+  bool _isSelectionMode = false;
+  final Set<String> _selectedIds = {};
+  List<FuelEntry> _fuelEntries = [];
   @override
   void initState(){
     super.initState();
@@ -42,12 +45,15 @@ class _FuelPageState extends State<FuelPage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.fuel_page),
+        title: Text(_isSelectionMode ? 'Выбрано: ${_selectedIds.length}' : l10n.fuel_page),
         titleTextStyle: const TextStyle(
           color: AppTheme.textColor,
           fontSize: 28,
           fontWeight: FontWeight.bold
-        )
+        ),
+        actions: [if (_isSelectionMode)
+          IconButton(onPressed: _selectedIds.isEmpty ? null : _showDeleteConfirm, 
+            icon: const Icon(Icons.delete))],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -106,9 +112,10 @@ class _FuelPageState extends State<FuelPage> {
   }
 
   Widget _buildFuelCard(FuelEntry entry) {
+    final isSelected = _selectedIds.contains(entry.id);
     return Card(
       child: ListTile(
-        
+        leading: _isSelectionMode ? Checkbox(value: isSelected, onChanged: (_) {_toggleSelection(entry.id);},) : null,
         title: Text(
           entry.station,
           style: const TextStyle(
@@ -123,8 +130,52 @@ class _FuelPageState extends State<FuelPage> {
           '${entry.totalCost.toStringAsFixed(2)} BYN',
         ),
         isThreeLine: true,
-
+        onLongPress: () {
+          setState(() {
+            _isSelectionMode = true;
+            _selectedIds.add(entry.id);
+          });
+        },
+        onTap: _isSelectionMode ? () => _toggleSelection(entry.id) : null,
       ),
     );
+  }
+
+  void _toggleSelection(String id) {
+    setState(() {
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+      }
+      else {
+        _selectedIds.add(id);
+      }
+      if (_selectedIds.isEmpty) {
+        _isSelectionMode = false;
+      }
+    });
+  }
+
+  Future<void> _showDeleteConfirm() async {
+    final confirmed = await showDialog(context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Удалить заправки?"),
+          content: Text('Выбрано ${_selectedIds.length}'),
+          actions: [
+            TextButton(onPressed: () {Navigator.pop(context, false);}, child: const Text('Отмена')),
+            TextButton(onPressed: () {Navigator.pop(context, true);}, child: const Text('Удалить', style: TextStyle(color: Colors.red))),
+          ],  
+        );
+      },
+    );
+    if (confirmed != true) {return;}
+    await _fuelManager.deleteEntries(_selectedIds);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _selectedIds.clear();
+      _isSelectionMode = false;
+    });
   }
 }
