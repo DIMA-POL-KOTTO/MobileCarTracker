@@ -3,6 +3,7 @@ import 'package:car_tracker/models/fuel_type.dart';
 class FuelEntry {
   final String id; 
   final String station; //АЗС
+  final String organization;
   final DateTime date; //дата
   final FuelType fuelType; // тип топл
   final double amount; // кол-во в л
@@ -13,6 +14,7 @@ class FuelEntry {
   FuelEntry({
     required this.id,
     required this.station,
+    required this.organization,
     required this.date,
     required this.fuelType,
     required this.amount,
@@ -25,6 +27,7 @@ class FuelEntry {
     return {
       'id': id,
       'station': station,
+      'organization': organization,
       'date': date.toIso8601String(),
       'fuelType': fuelType.name,
       'amount': amount,
@@ -36,7 +39,8 @@ class FuelEntry {
 
   factory FuelEntry.fromJson(Map<String, dynamic> json) {
     return FuelEntry(id: json['id'],
-      station: json['station'], 
+      station: json['station'],
+      organization: json['organization'], 
       date: DateTime.parse(json['date']), 
       fuelType: FuelType.values.firstWhere((type) => type.name == json['fuelType']), 
       amount: (json['amount'] as num).toDouble(), 

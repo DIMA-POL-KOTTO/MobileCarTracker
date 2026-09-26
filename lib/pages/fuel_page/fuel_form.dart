@@ -20,6 +20,7 @@ class FuelForm extends StatefulWidget {
 }
 class _FuelFormState extends State<FuelForm> {
   final TextEditingController _stationController = TextEditingController();
+  final TextEditingController _organizationController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -34,6 +35,7 @@ class _FuelFormState extends State<FuelForm> {
     final data = widget.initialData;
     if (data != null) {
       _stationController.text = data.station ?? '';
+      _organizationController.text = data.organization ?? '';
       _amountController.text = data.amount?.toString() ?? '';
       _priceController.text = data.price?.toString() ?? '';
       _totalCostController.text = data.totalCost?.toString() ?? '';
@@ -48,6 +50,7 @@ class _FuelFormState extends State<FuelForm> {
   @override
   void dispose() {
     _stationController.dispose();
+    _organizationController.dispose();
     _dateController.dispose();
     _amountController.dispose();
     _priceController.dispose();
@@ -68,6 +71,13 @@ class _FuelFormState extends State<FuelForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            TextField(
+              controller: _organizationController,
+              decoration: InputDecoration(
+                labelText: "Организация",
+              ),
+            ),
+            SizedBox(height: 16,),
             TextField(
               controller: _stationController,
               decoration: InputDecoration(
@@ -227,7 +237,7 @@ class _FuelFormState extends State<FuelForm> {
     final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
     final totalCost = double.tryParse(_totalCostController.text.replaceAll(',', '.'));
     final mileage = int.tryParse(_mileageController.text);
-    if (_stationController.text.trim().isEmpty || _selectedDate == null || amount == null || price == null || totalCost == null) {
+    if (_stationController.text.trim().isEmpty || _organizationController.text.trim().isEmpty || _selectedDate == null || amount == null || price == null || totalCost == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Заполните обязательные поля'),
@@ -239,6 +249,7 @@ class _FuelFormState extends State<FuelForm> {
     final entry = FuelEntry(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       station: _stationController.text.trim(),
+      organization: _organizationController.text.trim(),
       date: _selectedDate!,
       fuelType: _fuelType!,
       amount: amount,
@@ -326,6 +337,8 @@ class _FuelFormState extends State<FuelForm> {
   void _fillFromParsedReceipt(ParsedReceipt data) {
   setState(() {
     _stationController.text = data.station ?? '';
+
+    _organizationController.text = data.organization ?? '';
 
     _amountController.text =
         data.amount?.toString() ?? '';

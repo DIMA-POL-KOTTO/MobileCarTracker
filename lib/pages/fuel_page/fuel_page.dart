@@ -20,7 +20,6 @@ class _FuelPageState extends State<FuelPage> {
   final FuelManager _fuelManager = FuelManager.instance;
   bool _isSelectionMode = false;
   final Set<String> _selectedIds = {};
-  List<FuelEntry> _fuelEntries = [];
   @override
   void initState(){
     super.initState();
@@ -116,12 +115,23 @@ class _FuelPageState extends State<FuelPage> {
     return Card(
       child: ListTile(
         leading: _isSelectionMode ? Checkbox(value: isSelected, onChanged: (_) {_toggleSelection(entry.id);},) : null,
-        title: Text(
-          entry.station,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textColor,
-          ),
+        title: Row(crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Text(
+              entry.station,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textColor,
+                ),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.only(left: 8),
+              child: Text(entry.organization,
+                style: const TextStyle(
+                  fontSize: 12, color: AppTheme.secondaryColor),
+                ),
+              )
+          ]
         ),
         subtitle: Text(
           '${formatDate(entry.date)}\n'

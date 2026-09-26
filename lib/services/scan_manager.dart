@@ -66,7 +66,9 @@ class ScanManager extends ChangeNotifier{
     return scan;
   }
   bool _hasProblems(ParsedReceipt parsed) {
-    if (parsed.station == null || parsed.date == null ||
+    if (parsed.station == null ||
+      parsed.organization == null ||
+      parsed.date == null ||
       parsed.fuelType == null ||
       parsed.amount == null ||
       parsed.price == null ||

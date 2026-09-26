@@ -5,6 +5,7 @@ class ReceiptParser {
   static ParsedReceipt parse(String text) {
     return ParsedReceipt(
       station: _parseStation(text),
+      organization: _parseOrganization(text),
       date: _parseDate(text),
       fuelType: _parseFuelType(text),
       amount: _parseAmount(text),
@@ -15,28 +16,30 @@ class ReceiptParser {
   //АЗС
   static String? _parseStation(String text) {
     final lines = text.split('\n').map((line) => line.trim()).where((line) => line.isNotEmpty).toList();
-    String? organization;
     String? station;
-    for (int i = 0; i < lines.length; i++) {
-      final line = lines[i];
-      if (line.contains('Белоруснефть')) {
-        organization = line;
-        if (i + 1 < lines.length && lines[i + 1].contains('Гроднооблнефтепродукт')) {
-          organization = '$organization${lines[i + 1]}';
-        }
-      }  
+    for (final line in lines) {
       if (line.contains('АЗС')) {
         station = line; 
       }
     }
     
-    if (organization == null && station == null) {
+    if (station == null) {
       return null;
     }
-    if (organization != null && station != null) {
-      return '$organization, $station';
+    return station;
+  }
+
+  //Организация
+  static String? _parseOrganization(String text) {
+    final lines = text.split('\n').map((line) => line.trim()).where((line) => line.isNotEmpty).toList();
+
+    for (final line in lines) {
+      if (line.contains('Белоруснефть')) {
+        return 'Белоруснефть';
+      }
     }
-    return organization ?? station;
+
+    return null;
   }
   
   //Дата
