@@ -19,7 +19,7 @@ class _FuelPageState extends State<FuelPage> {
   final ScanManager _scanManager = ScanManager.instance;
   final FuelManager _fuelManager = FuelManager.instance;
   bool _isSelectionMode = false;
-  final Set<String> _selectedIds = {};
+  final Set<int> _selectedIds = {};
   @override
   void initState(){
     super.initState();
@@ -111,10 +111,14 @@ class _FuelPageState extends State<FuelPage> {
   }
 
   Widget _buildFuelCard(FuelEntry entry) {
+    if (entry.id == null) {
+      return const SizedBox.shrink();
+    }
+    final id = entry.id!;
     final isSelected = _selectedIds.contains(entry.id);
     return Card(
       child: ListTile(
-        leading: _isSelectionMode ? Checkbox(value: isSelected, onChanged: (_) {_toggleSelection(entry.id);},) : null,
+        leading: _isSelectionMode ? Checkbox(value: isSelected, onChanged: (_) {_toggleSelection(id);},) : null,
         title: Row(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: Text(
@@ -143,15 +147,15 @@ class _FuelPageState extends State<FuelPage> {
         onLongPress: () {
           setState(() {
             _isSelectionMode = true;
-            _selectedIds.add(entry.id);
+            _selectedIds.add(id);
           });
         },
-        onTap: _isSelectionMode ? () => _toggleSelection(entry.id) : null,
+        onTap: _isSelectionMode ? () => _toggleSelection(id) : null,
       ),
     );
   }
 
-  void _toggleSelection(String id) {
+  void _toggleSelection(int id) {
     setState(() {
       if (_selectedIds.contains(id)) {
         _selectedIds.remove(id);

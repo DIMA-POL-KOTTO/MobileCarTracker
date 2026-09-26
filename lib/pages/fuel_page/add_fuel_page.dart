@@ -1,5 +1,4 @@
 import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
-import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
 import 'package:car_tracker/services/scan_manager.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';

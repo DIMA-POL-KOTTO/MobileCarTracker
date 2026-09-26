@@ -1,7 +1,7 @@
 import 'package:car_tracker/models/fuel_type.dart';
 
 class FuelEntry {
-  final String id; 
+  final int? id; 
   final String station; //АЗС
   final String organization;
   final DateTime date; //дата
@@ -12,7 +12,7 @@ class FuelEntry {
   final int? mileage; // пробег
 
   FuelEntry({
-    required this.id,
+    this.id,
     required this.station,
     required this.organization,
     required this.date,
@@ -23,9 +23,8 @@ class FuelEntry {
     this.mileage,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toDB() {
     return {
-      'id': id,
       'station': station,
       'organization': organization,
       'date': date.toIso8601String(),
@@ -37,15 +36,39 @@ class FuelEntry {
     };
   }
 
-  factory FuelEntry.fromJson(Map<String, dynamic> json) {
-    return FuelEntry(id: json['id'],
-      station: json['station'],
-      organization: json['organization'], 
-      date: DateTime.parse(json['date']), 
-      fuelType: FuelType.values.firstWhere((type) => type.name == json['fuelType']), 
-      amount: (json['amount'] as num).toDouble(), 
-      price: (json['price'] as num).toDouble(), 
-      totalCost: (json['totalCost'] as num).toDouble(), 
-      mileage: json['mileage']);
+  factory FuelEntry.fromDB(Map<String, dynamic> data) {
+    return FuelEntry(id: data['id'] as int,
+      station: data['station'] as String,
+      organization: data['organization'] as String, 
+      date: DateTime.parse(data['date'] as String), 
+      fuelType: FuelType.values.firstWhere((type) => type.name == data['fuelType']), 
+      amount: (data['amount'] as num).toDouble(), 
+      price: (data['price'] as num).toDouble(), 
+      totalCost: (data['totalCost'] as num).toDouble(), 
+      mileage: data['mileage'] as int?);
+  }
+
+  FuelEntry copyWith({
+    int? id,
+    String? station,
+    String? organization,
+    DateTime? date,
+    FuelType? fuelType,
+    double? amount,
+    double? price,
+    double? totalCost,
+    int? mileage,
+  }) {
+    return FuelEntry(
+      id: id ?? this.id,
+      station: station ?? this.station,
+      organization: organization ?? this.organization,
+      date: date ?? this.date,
+      fuelType: fuelType ?? this.fuelType,
+      amount: amount ?? this.amount,
+      price: price ?? this.price,
+      totalCost: totalCost ?? this.totalCost,
+      mileage: mileage ?? this.mileage,
+    );
   }
 }
