@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final CarManager _carManager = CarManager.instance;
+  
 
   @override
   void initState() {
@@ -57,8 +58,13 @@ class _HomePageState extends State<HomePage> {
     if (_carManager.cars.isEmpty) {
       return EmptyCarCard(onAdd: _addCar);
     }
-    
-    return CarCard(car: _carManager.cars.first, l10n: l10n);
+    Car car = _carManager.cars.first;
+    return CarCard(car: car, l10n: l10n, onDelete: () async {
+      if (car.id == null) {
+        return;
+      }
+      await _carManager.delete(car.id!);
+    },);
   }
 
   Future<void> _addCar() async {

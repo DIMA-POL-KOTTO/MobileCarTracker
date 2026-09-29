@@ -3,116 +3,85 @@ import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/utils.dart';
+import 'dart:io';
 
 class CarCard extends StatelessWidget {
   final Car car;
   final AppLocalizations l10n;
   final VoidCallback? onUpdateMileage;
+  final VoidCallback onDelete;
 
-  const CarCard({super.key, required this.car, required this.l10n, this.onUpdateMileage});
+  const CarCard({super.key, required this.car, required this.l10n, this.onUpdateMileage, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            // Название автомобиля
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
+            child: Row(
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Icon(
-                    Icons.directions_car,
-                    size: 28,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
-
-                const SizedBox(width: 14),
-
                 Expanded(
                   child: Text(
                     car.name,
                     style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textColor,
-                    ),
+                      fontSize: 20,
+                      color: AppTheme.textColor
+                    ),  
                   ),
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      onDelete();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(value: 'delete', child: Text('Удалить'),)
+                  ],
                 ),
               ],
-            ),
-
-            const SizedBox(height: 28),
-
-            // Пробег + топливо
-            Row(
-              children: [
-
-                // Пробег
-                Expanded(
-                  child: _InfoBlock(
-                    icon: Icons.speed,
-                    title: l10n.current_mileage,
-                    value: '${_formatMileage(car.mileage)} ${l10n.km}',
-                  ),
-                ),
-
-                Container(
-                  height: 70,
-                  width: 1,
-                  color: Colors.grey.withOpacity(0.3),
-                ),
-
-                // Топливо
-                Expanded(
-                  child: _InfoBlock(
-                    icon: Icons.local_gas_station,
-                    title: 'Топливо',
-                    value: fuelTypeName(car.fuelType),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 28),
-
-            // Кнопка
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton.icon(
-                onPressed: onUpdateMileage,
-                icon: const Icon(Icons.refresh),
-                label: const Text(
-                  'Обновить пробег',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: AppTheme.backgroundColor,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
+            )
+          ),
+          if (car.imgPath != null)
+            Padding(
+              padding: const EdgeInsetsGeometry.fromLTRB(12, 0, 12, 16),
+              child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(
+                File(car.imgPath!),
+                width: double.infinity,
+                height: 180,
+                fit: BoxFit.cover,
               ),
             ),
-          ],
-        ),
+          ),
+           Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Пробег',
+                  style: TextStyle(
+                    color: AppTheme.textSecondaryColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${car.mileage} км',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

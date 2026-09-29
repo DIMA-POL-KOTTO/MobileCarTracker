@@ -29,4 +29,11 @@ class CarManager extends ChangeNotifier {
     cars.insert(0, savedCar);
     notifyListeners();
   }
+
+  Future<void> delete(int id) async {
+    final db = await DatabaseService.instance.database;
+    await db.delete('cars', where: 'id = ?', whereArgs: [id]);
+    cars.removeWhere((car) => car.id == id);
+    notifyListeners();
+  }
 }
