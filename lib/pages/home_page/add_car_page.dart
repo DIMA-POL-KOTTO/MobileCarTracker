@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:car_tracker/models/car.dart';
 import 'package:car_tracker/utils.dart';
 import 'package:car_tracker/theme/app_theme.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AddCarPage extends StatefulWidget{
   const AddCarPage({super.key});
@@ -16,6 +18,7 @@ class _AddCarPageState extends State<AddCarPage> {
   final _nameController = TextEditingController();
   final _mileageController = TextEditingController();
   FuelType? _fuelType;
+  File? _selectedImage;
   
   @override
   void dispose() {
@@ -34,6 +37,26 @@ class _AddCarPageState extends State<AddCarPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            GestureDetector(
+              onTap:_pickImage,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  width: double.infinity,
+                  height: 200,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: _selectedImage == null ? const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_a_photo, size: 48, color: AppTheme.primaryColor,),
+                      SizedBox(height: 8,),
+                      Text("Добавить фотографию")
+                    ],
+                  ) : Image.file(_selectedImage!, fit: BoxFit.cover)  
+                ),
+              ),
+            ),
+            const SizedBox(height: 16,),
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
@@ -93,7 +116,7 @@ class _AddCarPageState extends State<AddCarPage> {
       return;
     }
 
-    final car = Car(name: name, fuelType: _fuelType!, mileage: mileage);
+    final car = Car(name: name, imgPath: _selectedImage?.path, fuelType: _fuelType!, mileage: mileage);
     await CarManager.instance.add(car);
     if (!mounted) {
       return;
@@ -101,5 +124,14 @@ class _AddCarPageState extends State<AddCarPage> {
     Navigator.pop(context);
   }
 
-
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      return;
+    }
+    setState(() {
+      _selectedImage = File(image.path);
+    });
+  }
 }

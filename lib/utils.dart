@@ -1,4 +1,6 @@
 import 'package:car_tracker/models/fuel_type.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 String fuelTypeName(FuelType type) {
   switch (type) {
