@@ -17,7 +17,7 @@ class DatabaseService {
   Future<Database>  _initDatabase() async {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, "car_care.db");
-    return openDatabase(path, version: 1, onCreate: (db, version) async {
+    return openDatabase(path, version: 2, onCreate: (db, version) async {
       await db.execute('''
         CREATE TABLE fuel_entries(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,7 +31,27 @@ class DatabaseService {
           mileage INTEGER
         )
       ''');
-    
-    });
+      await db.execute('''
+          CREATE TABLE cars(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            fuelType TEXT NOT NULL,
+            mileage INTEGER NOT NULL
+          )
+        ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            CREATE TABLE cars(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT NOT NULL,
+              fuelType TEXT NOT NULL,
+              mileage INTEGER NOT NULL
+            )
+          ''');
+        }
+      }
+    );
   }
 }
