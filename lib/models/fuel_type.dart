@@ -7,3 +7,10 @@ enum FuelType {
   gas,
   electric,
 }
+
+enum FuelTypeCar {
+  petrol,
+  diesel,
+  gas,
+  electric,
+}

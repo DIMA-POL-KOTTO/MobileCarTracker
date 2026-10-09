@@ -4,7 +4,7 @@ class Car {
   final int? id; 
   final String name;
   final String? imgPath;
-  final FuelType fuelType;
+  final FuelTypeCar fuelType;
   final int mileage;
 
   Car({
@@ -28,7 +28,7 @@ class Car {
     return Car(id: data['id'] as int,
       name: data['name'] as String,
       imgPath: data['imgPath'] as String?,
-      fuelType: FuelType.values.firstWhere((type) => type.name == data['fuelType']),
+      fuelType: FuelTypeCar.values.firstWhere((type) => type.name == data['fuelType']),
       mileage: data['mileage'] as int);
   }
 
@@ -36,7 +36,7 @@ class Car {
     int? id,
     String? name,
     String? imgPath,
-    FuelType? fuelType,
+    FuelTypeCar? fuelType,
     int? mileage,
   }) {
     return Car(

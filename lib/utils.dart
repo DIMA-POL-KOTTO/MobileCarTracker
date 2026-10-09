@@ -21,6 +21,19 @@ String fuelTypeName(FuelType type) {
   }
 }
 
+String fuelTypeCarName(FuelTypeCar type) {
+  switch (type) {
+    case FuelTypeCar.petrol:
+      return 'Бензин';
+    case FuelTypeCar.diesel:
+      return 'Дизель';
+    case FuelTypeCar.gas:
+      return 'Газ';
+    case FuelTypeCar.electric:
+      return 'Электро';
+  }
+}
+
 String formatDate(DateTime date) {
   return '${date.day.toString().padLeft(2, '0')}.'
       '${date.month.toString().padLeft(2, '0')}.'

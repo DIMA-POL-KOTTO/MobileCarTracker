@@ -17,7 +17,7 @@ class AddCarPage extends StatefulWidget{
 class _AddCarPageState extends State<AddCarPage> {
   final _nameController = TextEditingController();
   final _mileageController = TextEditingController();
-  FuelType? _fuelType;
+  FuelTypeCar? _fuelType;
   File? _selectedImage;
   
   @override
@@ -33,7 +33,7 @@ class _AddCarPageState extends State<AddCarPage> {
       appBar: AppBar(
         title: const Text('Добавить автомобиль'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -64,14 +64,14 @@ class _AddCarPageState extends State<AddCarPage> {
               ),
             ),
             const SizedBox(height: 16,),
-            DropdownButtonFormField<FuelType>(
+            DropdownButtonFormField<FuelTypeCar>(
               decoration: const InputDecoration(
                 labelText: 'Тип топлива',
               ),
-              items: FuelType.values.map((type) {
+              items: FuelTypeCar.values.map((type) {
                 return DropdownMenuItem(
                   value: type,
-                  child: Text(fuelTypeName(type)),
+                  child: Text(fuelTypeCarName(type)),
                 );
               }).toList(),
               onChanged: (value) {
