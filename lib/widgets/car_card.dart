@@ -8,10 +8,10 @@ import 'dart:io';
 class CarCard extends StatelessWidget {
   final Car car;
   final AppLocalizations l10n;
-  final VoidCallback? onUpdateMileage;
+  final Future<void> Function(int mileage) onUpdateMileage;
   final VoidCallback onDelete;
 
-  const CarCard({super.key, required this.car, required this.l10n, this.onUpdateMileage, required this.onDelete});
+  const CarCard({super.key, required this.car, required this.l10n, required this.onUpdateMileage, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class CarCard extends StatelessWidget {
                     car.name,
                     style: const TextStyle(
                       fontSize: 20,
-                      color: AppTheme.textColor
+                      color: AppTheme.textColor,
                     ),  
                   ),
                 ),
@@ -47,7 +47,7 @@ class CarCard extends StatelessWidget {
           ),
           if (car.imgPath != null)
             Padding(
-              padding: const EdgeInsetsGeometry.fromLTRB(12, 0, 12, 16),
+              padding: const EdgeInsetsGeometry.fromLTRB(16, 0, 16, 0),
               child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.file(
@@ -60,7 +60,11 @@ class CarCard extends StatelessWidget {
           ),
            Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children:[
+                Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -73,11 +77,23 @@ class CarCard extends StatelessWidget {
                 Text(
                   '${car.mileage} км',
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.textColor,
                   ),
                 ),
+              ],
+            ),
+            TextButton(
+              onPressed: () => _showMileageDialog(context),
+              child: Text('Обновить',
+                style: const TextStyle(
+                  color: AppTheme.primaryColor,
+                  fontSize: 14
+                ),
+               
+              ),
+            ),    
               ],
             ),
           ),
@@ -86,70 +102,40 @@ class CarCard extends StatelessWidget {
     );
   }
 
-  String _formatMileage(int mileage) {
-    final text = mileage.toString();
-    final buffer = StringBuffer();
-
-    for (int i = 0; i < text.length; i++) {
-      if (i > 0 && (text.length - i) % 3 == 0) {
-        buffer.write(' ');
-      }
-      buffer.write(text[i]);
-    }
-
-    return buffer.toString();
-  }
-}
-
-
-class _InfoBlock extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-
-  const _InfoBlock({
-    required this.icon,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            size: 28,
-            color: AppTheme.primaryColor,
-          ),
-
-          const SizedBox(height: 8),
-
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppTheme.textSecondaryColor,
+  void _showMileageDialog(BuildContext context) {
+    final TextEditingController controller = TextEditingController(text: car.mileage.toString());
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Обновить пробег'),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Пробег (км)',
             ),
           ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            value,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textColor,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена'),
             ),
-          ),
-        ],
-      ),
+            ElevatedButton(
+              onPressed: () async {
+                final int? newMileage = int.tryParse(controller.text);
+                if (newMileage != null) {
+                  await onUpdateMileage(newMileage);
+                  Navigator.pop(context);
+                } 
+              },
+              child: const Text('Сохранить'),
+            ),
+          ],
+        );
+      },
     );
   }
+  
 }
 

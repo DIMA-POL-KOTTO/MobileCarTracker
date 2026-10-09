@@ -64,6 +64,12 @@ class _HomePageState extends State<HomePage> {
         return;
       }
       await _carManager.delete(car.id!);
+    }, onUpdateMileage: (mileage) async {
+      if (car.id == null) {
+        return;
+      }
+
+      await _carManager.updateMileage(car.id!, mileage);
     },);
   }
 

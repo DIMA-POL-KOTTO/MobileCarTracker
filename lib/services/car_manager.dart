@@ -36,4 +36,15 @@ class CarManager extends ChangeNotifier {
     cars.removeWhere((car) => car.id == id);
     notifyListeners();
   }
+
+  Future<void> updateMileage(int carId, int mileage) async {
+    
+    final db = await DatabaseService.instance.database;
+    await db.update('cars', {'mileage': mileage}, where: 'id = ?', whereArgs: [carId]);
+    final index = cars.indexWhere((car) => car.id == carId);
+    if (index != -1) {
+      cars[index] = cars[index].copyWith(mileage: mileage);
+    }
+    notifyListeners();
+  }
 }
