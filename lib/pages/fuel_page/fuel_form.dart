@@ -8,6 +8,7 @@ import 'package:car_tracker/services/image_picker.dart';
 import 'package:car_tracker/models/fuel_entry.dart';
 import 'package:car_tracker/services/fuel_manager.dart';
 import 'package:car_tracker/utils.dart';
+import 'package:car_tracker/services/car_manager.dart';
 
 class FuelForm extends StatefulWidget {
   final ParsedReceipt? initialData;
@@ -236,7 +237,8 @@ class _FuelFormState extends State<FuelForm> {
     final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
     final totalCost = double.tryParse(_totalCostController.text.replaceAll(',', '.'));
-    final mileage = int.tryParse(_mileageController.text);
+    final mileageText = _mileageController.text.trim();
+    final mileage = mileageText.isEmpty ? null : int.tryParse(mileageText);
     if (_stationController.text.trim().isEmpty || _organizationController.text.trim().isEmpty || _selectedDate == null || amount == null || price == null || totalCost == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -246,6 +248,38 @@ class _FuelFormState extends State<FuelForm> {
       );
       return;
     }
+    final carManager = CarManager.instance;
+    if (mileage != null) {
+      await carManager.init();
+      if (carManager.cars.isNotEmpty) {
+        final car = carManager.cars.first;
+        if (car.id != null && mileage < car.mileage) {
+          final shouldContinue = await showDialog<bool> (
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                title: const Text('Подтверждение'),
+                content: Text('Введенный пробег $mileage меньше текущего ${car.mileage}. Вы уверены, что хотите продолжить?'),
+                actions: [
+                  TextButton(
+                    onPressed: () { Navigator.of(dialogContext).pop(false); },
+                    child: const Text('Отмена'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () { Navigator.of(dialogContext).pop(true); },
+                    child: const Text('Продолжить'),
+                  ),
+                ],
+              );
+            },
+          );
+          if (shouldContinue != true) {
+            return;
+          }
+        }
+      }
+    }
+    if (!mounted) return;
     final entry = FuelEntry(
       station: _stationController.text.trim(),
       organization: _organizationController.text.trim(),
@@ -257,6 +291,15 @@ class _FuelFormState extends State<FuelForm> {
       mileage: mileage,
     );
     await FuelManager.instance.add(entry);
+    if (mileage != null) {
+      await carManager.init();
+      if (carManager.cars.isNotEmpty) {
+        final car = carManager.cars.first;
+        if (car.id != null) {
+          await carManager.updateMileage(car.id!, mileage);
+        }
+      }
+    }
     if (widget.scan != null) {
       ScanManager.instance.scans.remove(widget.scan);
       ScanManager.instance.notifyListeners();
