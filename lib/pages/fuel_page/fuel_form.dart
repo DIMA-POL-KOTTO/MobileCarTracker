@@ -12,9 +12,10 @@ import 'package:car_tracker/services/car_manager.dart';
 
 class FuelForm extends StatefulWidget {
   final ParsedReceipt? initialData;
+  final FuelEntry? entry;
   final bool isEditing;
   final ReceiptScan? scan;
-  const FuelForm({super.key, this.initialData, this.isEditing = false, this.scan});
+  const FuelForm({super.key, this.initialData, this.entry, this.isEditing = false, this.scan});
 
   @override
   State<FuelForm> createState() => _FuelFormState();
@@ -33,18 +34,26 @@ class _FuelFormState extends State<FuelForm> {
   @override
   void initState() {
     super.initState();
+    final entry = widget.entry;
     final data = widget.initialData;
-    if (data != null) {
-      _stationController.text = data.station ?? '';
-      _organizationController.text = data.organization ?? '';
-      _amountController.text = data.amount?.toString() ?? '';
-      _priceController.text = data.price?.toString() ?? '';
-      _totalCostController.text = data.totalCost?.toString() ?? '';
-      _fuelType = data.fuelType;
-      if (data.date != null) {
-        _selectedDate = data.date;
-        _dateController.text = '${data.date!.day.toString().padLeft(2, '0')}.${data.date!.month.toString().padLeft(2, '0')}.${data.date!.year}';
-      }
+    final station = entry?.station ?? data?.station;
+    final organization = entry?.organization ?? data?.organization;
+    final amount = entry?.amount ?? data?.amount;
+    final price = entry?.price ?? data?.price;
+    final totalCost = entry?.totalCost ?? data?.totalCost;
+    final fuelType = entry?.fuelType ?? data?.fuelType;
+    final date = entry?.date ?? data?.date;
+    final mileage = entry?.mileage;
+    _stationController.text = station ?? '';
+    _organizationController.text = organization ?? '';
+    _amountController.text = amount?.toString() ?? '';
+    _priceController.text = price?.toString() ?? '';
+    _totalCostController.text = totalCost?.toString() ?? '';
+    _mileageController.text = mileage?.toString() ?? '';
+    _fuelType = fuelType;
+    _selectedDate = date;
+    if (date != null) {
+    _dateController.text = '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
     }
   }
 
@@ -280,7 +289,8 @@ class _FuelFormState extends State<FuelForm> {
       }
     }
     if (!mounted) return;
-    final entry = FuelEntry(
+    final updatedEntry = FuelEntry(
+      id: widget.entry?.id,
       station: _stationController.text.trim(),
       organization: _organizationController.text.trim(),
       date: _selectedDate!,
@@ -290,7 +300,12 @@ class _FuelFormState extends State<FuelForm> {
       totalCost: totalCost,
       mileage: mileage,
     );
-    await FuelManager.instance.add(entry);
+    final fuelManager = FuelManager.instance;
+    if (widget.entry != null) {
+      await fuelManager.update(updatedEntry);
+    } else {
+      await fuelManager.add(updatedEntry);
+    }
     if (mileage != null) {
       await carManager.init();
       if (carManager.cars.isNotEmpty) {

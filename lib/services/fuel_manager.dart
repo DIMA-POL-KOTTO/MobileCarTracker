@@ -32,6 +32,26 @@ class FuelManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> update(FuelEntry entry) async {
+    if (entry.id == null) {
+      throw ArgumentError("No ID");
+    }
+    final db = await DatabaseService.instance.database;
+    await db.update('fuel_entries', entry.toDB(), where: 'id = ?', whereArgs: [entry.id]);
+    final index = entries.indexWhere((item) => item.id == entry.id);
+    if (index != -1) {
+      entries[index] = entry;
+    }
+    entries.sort((a,b) {
+      final dateComp = b.date.compareTo(a.date);
+      if (dateComp != 0) {
+        return dateComp;
+      }
+      return (b.id ?? 0).compareTo(a.id ?? 0);
+    });
+    notifyListeners();
+  }
+
   Future<void> deleteEntries(Set<int> ids) async {
     if (ids.isEmpty) {
       return;

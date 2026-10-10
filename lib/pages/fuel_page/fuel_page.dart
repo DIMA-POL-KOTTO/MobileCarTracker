@@ -1,3 +1,4 @@
+import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/services/scan_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/theme/app_theme.dart';
@@ -66,7 +67,7 @@ class _FuelPageState extends State<FuelPage> {
               FloatingActionButton(
               heroTag: 'scans_fuel_button',
               backgroundColor: AppTheme.primaryColor,
-              foregroundColor: AppTheme.backgroundColor,
+              foregroundColor: const Color.fromARGB(255, 236, 216, 216),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -145,7 +146,7 @@ class _FuelPageState extends State<FuelPage> {
           _selectedIds.add(id);
         });
       },
-      onTap: _isSelectionMode ? () => _toggleSelection(id) : null,
+      onTap: _isSelectionMode ? () => _toggleSelection(id) : () {Navigator.push(context, MaterialPageRoute(builder: (context) => FuelForm(entry: entry, isEditing: true,)));},
     );
   }
 

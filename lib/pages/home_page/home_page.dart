@@ -1,3 +1,4 @@
+import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
 import 'package:car_tracker/pages/home_page/add_car_page.dart';
 import 'package:car_tracker/services/car_manager.dart';
 import 'package:car_tracker/theme/app_theme.dart';
@@ -123,6 +124,7 @@ class _HomePageState extends State<HomePage> {
 
     return FuelCard(
       entry: _fuelManager.entries.first,
+      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => FuelForm(entry: _fuelManager.entries.first, isEditing: true,)));},
     );
   }
 
