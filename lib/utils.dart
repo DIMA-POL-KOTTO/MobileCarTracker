@@ -39,3 +39,24 @@ String formatDate(DateTime date) {
       '${date.month.toString().padLeft(2, '0')}.'
       '${date.year}';
 }
+
+String monthName(DateTime date) {
+  const months = [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь',
+    'Декабрь',
+  ];
+  if (date.month < 1 || date.month > 12) {
+    return '';
+  }
+  return '${months[date.month - 1]} ${date.year}';
+}

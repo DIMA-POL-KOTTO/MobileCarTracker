@@ -7,6 +7,7 @@ import 'scans_fuel_page.dart';
 import 'package:car_tracker/services/fuel_manager.dart';
 import 'package:car_tracker/models/fuel_entry.dart';
 import 'package:car_tracker/utils.dart';
+import 'package:car_tracker/widgets/fuel_card.dart';
 
 class FuelPage extends StatefulWidget {
   const FuelPage({super.key});
@@ -102,12 +103,31 @@ class _FuelPageState extends State<FuelPage> {
     if (_fuelManager.entries.isEmpty) {
       return const Center(child: Text('Заправок пока нет', style: TextStyle(color: AppTheme.textColor, fontSize: 16)),);
     }
-    return ListView.separated(itemBuilder: ((context, index) {
-      final entry = _fuelManager.entries[index];
-      return _buildFuelCard(entry);
-    }), 
-      separatorBuilder: (_,__) => const SizedBox(height: 12,), 
-      itemCount: _fuelManager.entries.length);
+    final List<Widget> items = [];
+    String? prevMonth;
+    for (final entry in _fuelManager.entries) {
+      final month = monthName(entry.date);
+      if (month != prevMonth) {
+        if (items.isNotEmpty) {
+          items.add(const SizedBox(height: 16,));
+        }
+        items.add(
+          Padding(padding: const EdgeInsets.only(left: 8, bottom: 8),
+            child: Text(month,
+              style: const TextStyle(
+                color: AppTheme.textColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+        );
+        prevMonth = month;
+      }
+      items.add(_buildFuelCard(entry));
+      items.add(const SizedBox(height: 12,));
+    }
+    return ListView(children: items,);
   }
 
   Widget _buildFuelCard(FuelEntry entry) {
@@ -116,42 +136,16 @@ class _FuelPageState extends State<FuelPage> {
     }
     final id = entry.id!;
     final isSelected = _selectedIds.contains(entry.id);
-    return Card(
-      child: ListTile(
-        leading: _isSelectionMode ? Checkbox(value: isSelected, onChanged: (_) {_toggleSelection(id);},) : null,
-        title: Row(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: Text(
-              entry.station,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textColor,
-                ),
-              ),
-            ),
-            Padding(padding: const EdgeInsets.only(left: 8),
-              child: Text(entry.organization,
-                style: const TextStyle(
-                  fontSize: 12, color: AppTheme.secondaryColor),
-                ),
-              )
-          ]
-        ),
-        subtitle: Text(
-          '${formatDate(entry.date)}\n'
-          '${fuelTypeName(entry.fuelType)} · '
-          '${entry.amount.toStringAsFixed(2)} л · '
-          '${entry.totalCost.toStringAsFixed(2)} BYN',
-        ),
-        isThreeLine: true,
-        onLongPress: () {
-          setState(() {
-            _isSelectionMode = true;
-            _selectedIds.add(id);
-          });
-        },
-        onTap: _isSelectionMode ? () => _toggleSelection(id) : null,
-      ),
+    return FuelCard(
+      entry: entry,
+      leading: _isSelectionMode ? Checkbox(value: isSelected, onChanged: (_) => _toggleSelection(id)) : null,
+      onLongPress: () {
+        setState(() {
+          _isSelectionMode = true;
+          _selectedIds.add(id);
+        });
+      },
+      onTap: _isSelectionMode ? () => _toggleSelection(id) : null,
     );
   }
 
