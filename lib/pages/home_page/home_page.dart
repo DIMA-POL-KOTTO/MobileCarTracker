@@ -78,7 +78,11 @@ class _HomePageState extends State<HomePage> {
           return;
         }
         await _carManager.delete(car.id!);
-      }, onUpdateMileage: (mileage) async {
+      }, 
+      onUpdate: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AddCarPage(car: car)));
+      },
+      onUpdateMileage: (mileage) async {
         if (car.id == null) {
           return;
         }

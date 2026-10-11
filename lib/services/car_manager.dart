@@ -37,6 +37,19 @@ class CarManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> update(Car car) async {
+    if (car.id == null) {
+      throw ArgumentError("No ID");
+    }
+    final db = await DatabaseService.instance.database;
+    await db.update('cars', car.toDB(), where: 'id = ?', whereArgs: [car.id]);
+    final index = cars.indexWhere((item) => item.id == car.id);
+    if (index != -1) {
+      cars[index] = car;
+    }
+    notifyListeners();
+  }
+
   Future<void> updateMileage(int carId, int mileage) async {
     
     final db = await DatabaseService.instance.database;

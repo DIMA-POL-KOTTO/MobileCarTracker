@@ -8,7 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class AddCarPage extends StatefulWidget{
-  const AddCarPage({super.key});
+  final Car? car;
+  const AddCarPage({super.key, this.car});
 
   @override
   State<AddCarPage> createState() => _AddCarPageState();
@@ -20,6 +21,21 @@ class _AddCarPageState extends State<AddCarPage> {
   FuelTypeCar? _fuelType;
   File? _selectedImage;
   
+  @override
+  void initState() {
+    super.initState();
+    final car = widget.car;
+    if (car != null) {
+      _nameController.text = car.name;
+      _mileageController.text = car.mileage.toString();
+      _fuelType = car.fuelType;
+      if (car.imgPath != null) {
+        _selectedImage = File(car.imgPath!);
+      }
+    }
+    
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -65,6 +81,7 @@ class _AddCarPageState extends State<AddCarPage> {
             ),
             const SizedBox(height: 16,),
             DropdownButtonFormField<FuelTypeCar>(
+              initialValue: _fuelType,
               decoration: const InputDecoration(
                 labelText: 'Тип топлива',
               ),
@@ -116,8 +133,12 @@ class _AddCarPageState extends State<AddCarPage> {
       return;
     }
 
-    final car = Car(name: name, imgPath: _selectedImage?.path, fuelType: _fuelType!, mileage: mileage);
-    await CarManager.instance.add(car);
+    final car = Car(id: widget.car?.id, name: name, imgPath: _selectedImage?.path, fuelType: _fuelType!, mileage: mileage);
+    if (widget.car == null) {
+      await CarManager.instance.add(car);
+    } else {
+      await CarManager.instance.update(car);
+    }
     if (!mounted) {
       return;
     }

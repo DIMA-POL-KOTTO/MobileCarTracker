@@ -10,8 +10,9 @@ class CarCard extends StatelessWidget {
   final AppLocalizations l10n;
   final Future<void> Function(int mileage) onUpdateMileage;
   final VoidCallback onDelete;
+  final VoidCallback onUpdate;
 
-  const CarCard({super.key, required this.car, required this.l10n, required this.onUpdateMileage, required this.onDelete});
+  const CarCard({super.key, required this.car, required this.l10n, required this.onUpdateMileage, required this.onDelete, required this.onUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +39,13 @@ class CarCard extends StatelessWidget {
                     if (value == 'delete') {
                       onDelete();
                     }
+                    if (value == 'update') {
+                      onUpdate();
+                    }
                   },
                   itemBuilder: (context) => [
-                    const PopupMenuItem(value: 'delete', child: Text('Удалить'),)
+                    const PopupMenuItem(value: 'delete', child: Text('Удалить'),),
+                    const PopupMenuItem(value: 'update', child: Text('Изменить'),),
                   ],
                 ),
               ],
