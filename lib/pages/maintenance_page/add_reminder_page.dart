@@ -1,8 +1,10 @@
 import 'package:car_tracker/services/car_manager.dart';
+import 'package:car_tracker/services/db.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:car_tracker/utils.dart';
+import 'package:car_tracker/services/maintenance_service.dart';
 
 class AddReminderPage extends StatefulWidget{
   const AddReminderPage({super.key});
@@ -128,21 +130,42 @@ class _AddReminderPageState extends State<AddReminderPage> {
     });
   }
 
-  void _saveReminder() {
+  Future<void> _saveReminder() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_byMileage) {
-      final nextMileage = int.tryParse(_nextMileageController.text);
-      if (nextMileage == null) {
-        _showMessage("Укажите следующий пробег");
-        return;
-      }
-    } else {
-      if (_nextDate == null) {
-        _showMessage("Укажите следующую дату");
-        return;
-      }
+    final carManager = CarManager.instance;
+    await carManager.init();
+    if (!mounted) return;
+    if (carManager.cars.isEmpty) {
+      return;
     }
-    _showMessage("Форма заполнена");
+    final car = carManager.cars.first;
+    final Map<String, dynamic> reminder = {
+      'carId': car.id,
+      'title': _titleController.text.trim(),
+      'category': _category!,
+      'reminderType': _byMileage ? 'mileage' : 'date',
+      'dueM': _byMileage ? int.parse(_nextMileageController.text) : null,
+      'dueD': !_byMileage ? formatDate(_nextDate!) : null,
+      'repeatByM': 0,
+      'intervalM': _byMileage ? int.tryParse(_intervalMileageController.text) : null,
+      'repeatByD': 0,
+      'intervalD': !_byMileage ? int.tryParse(_intervalMonthsController.text) : null,
+      'status': 'active'
+    };
+    try {
+      await MaintenanceReminderService.instance.insert(reminder);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Сохранено'),
+      ),
+    );
+    Navigator.pop(context);
+    } catch (err) {
+      if (!mounted) return;
+      _showMessage('Ошибка сохранения');
+    }
+    
   }
 
   void _showMessage(String message) {
