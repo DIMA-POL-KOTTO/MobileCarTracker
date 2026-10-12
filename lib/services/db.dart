@@ -17,7 +17,10 @@ class DatabaseService {
   Future<Database>  _initDatabase() async {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, "car_care.db");
-    return openDatabase(path, version: 4, onCreate: (db, version) async {
+    return openDatabase(path, version: 5, onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      }, 
+      onCreate: (db, version) async {
       await db.execute('''
         CREATE TABLE fuel_entries(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -91,6 +94,13 @@ class DatabaseService {
               FOREIGN KEY (carId) REFERENCES cars(id) ON DELETE CASCADE,
               FOREIGN KEY (reminderId) REFERENCES maintenance_reminders ON DELETE SET NULL
             )
+          ''');
+        }
+
+        if (oldVersion < 5) {
+          await db.execute('''
+            ALTER TABLE maintenance_reminders
+            RENAME COLUMN remidnerType TO reminderType
           ''');
         }
       }
