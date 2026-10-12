@@ -1,6 +1,6 @@
 import 'package:car_tracker/pages/home_page/home_page.dart';
 import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
-import 'package:car_tracker/pages/maintenance_page.dart';
+import 'package:car_tracker/pages/maintenance_page/maintenance_page.dart';
 import 'package:car_tracker/pages/more_page/more_page.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
