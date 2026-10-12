@@ -17,7 +17,7 @@ class DatabaseService {
   Future<Database>  _initDatabase() async {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, "car_care.db");
-    return openDatabase(path, version: 3, onCreate: (db, version) async {
+    return openDatabase(path, version: 4, onCreate: (db, version) async {
       await db.execute('''
         CREATE TABLE fuel_entries(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,6 +56,41 @@ class DatabaseService {
           await db.execute('''
             ALTER TABLE cars
             ADD COLUMN imgPath TEXT
+          ''');
+        }
+
+        if (oldVersion < 4) {
+          await db.execute('''
+            CREATE TABLE maintenance_reminders(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              carId INTEGER NOT NULL,
+              title TEXT NOT NULL,
+              category TEXT NOT NULL,
+              remidnerType TEXT NOT NULL,
+              dueM INTEGER,
+              dueD TEXT,
+              repeatByM INTEGER NOT NULL DEFAULT 0,
+              intervalM INTEGER,
+              repeatByD INTEGER NOT NULL DEFAULT 0,
+              intervalD INTEGER,
+              status TEXT NOT NULL DEFAULT 'active',
+              FOREIGN KEY (carId) REFERENCES cars(id) ON DELETE CASCADE
+            )
+          ''');
+          await db.execute('''
+            CREATE TABLE maintenance_history(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              carId INTEGER NOT NULL,
+              reminderId INTEGER,
+              title TEXT NOT NULL,
+              category TEXT NOT NULL,
+              date TEXT NOT NULL,
+              mileage INTEGER NOT NULL,
+              cost REAL,
+              comment TEXT,
+              FOREIGN KEY (carId) REFERENCES cars(id) ON DELETE CASCADE,
+              FOREIGN KEY (reminderId) REFERENCES maintenance_reminders ON DELETE SET NULL
+            )
           ''');
         }
       }
