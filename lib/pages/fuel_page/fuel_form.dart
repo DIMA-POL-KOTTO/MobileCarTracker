@@ -3,12 +3,15 @@ import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:car_tracker/models/fuel_type.dart';
 import 'package:car_tracker/services/models/parsed_receipt.dart';
+import 'package:car_tracker/widgets/app_dropdown_field.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/services/image_picker.dart';
 import 'package:car_tracker/models/fuel_entry.dart';
 import 'package:car_tracker/services/fuel_manager.dart';
 import 'package:car_tracker/utils.dart';
 import 'package:car_tracker/services/car_manager.dart';
+import 'package:car_tracker/widgets/app_text_field.dart';
+import 'package:car_tracker/widgets/app_date_field.dart';
 
 class FuelForm extends StatefulWidget {
   final ParsedReceipt? initialData;
@@ -23,7 +26,7 @@ class FuelForm extends StatefulWidget {
 class _FuelFormState extends State<FuelForm> {
   final TextEditingController _stationController = TextEditingController();
   final TextEditingController _organizationController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _totalCostController = TextEditingController();
@@ -52,16 +55,13 @@ class _FuelFormState extends State<FuelForm> {
     _mileageController.text = mileage?.toString() ?? '';
     _fuelType = fuelType;
     _selectedDate = date;
-    if (date != null) {
-    _dateController.text = '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
-    }
   }
 
   @override
   void dispose() {
     _stationController.dispose();
     _organizationController.dispose();
-    _dateController.dispose();
+
     _amountController.dispose();
     _priceController.dispose();
     _totalCostController.dispose();
@@ -81,47 +81,33 @@ class _FuelFormState extends State<FuelForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            AppTextField(
               controller: _organizationController,
-              decoration: InputDecoration(
-                labelText: "Организация",
-              ),
+              hint: "Организация",
             ),
             SizedBox(height: 16,),
-            TextField(
+            AppTextField(
               controller: _stationController,
-              decoration: InputDecoration(
-                labelText: l10n.fuel_station,
-              ),
+              hint: l10n.fuel_station,
             ),
             SizedBox(height: 16,),
-            TextField(
-              controller: _dateController,
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: l10n.fuel_date,
-                suffixIcon: const Icon(Icons.calendar_today),
-              ),
-              onTap: () async {
+            AppDateField(date: _selectedDate, onTap: () async {
+              final now = DateTime.now();
                 final pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDate ?? DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime.now(),
-                );
-
-                if (pickedDate != null) {
-                  setState(() {
-                    _selectedDate = pickedDate;
-                    _dateController.text = '${pickedDate.day.toString().padLeft(2, '0')}.${pickedDate.month.toString().padLeft(2, '0')}.${pickedDate.year}';
-                  });
-                }
-              }
-            ),
+                context: context,
+                initialDate: _selectedDate ?? now,
+                firstDate: DateTime(2000),
+                lastDate: now,
+              );
+              if (pickedDate == null || !mounted) return;
+              setState(() {
+                _selectedDate = pickedDate;
+              });
+            }),
             SizedBox(height: 16,),
-            DropdownButtonFormField<FuelType>(
-              initialValue: _fuelType,
-              decoration: InputDecoration(labelText: l10n.fuel_type),
+            AppDropdownField<FuelType>(
+              value: _fuelType,
+              hint: l10n.fuel_type,
               items: FuelType.values.map((type) {
                 return DropdownMenuItem<FuelType>(
                   value: type,
@@ -136,40 +122,34 @@ class _FuelFormState extends State<FuelForm> {
             ),
            
             SizedBox(height: 16,),
-            TextField(
+            AppTextField(
               controller: _amountController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: InputDecoration(
-                labelText: l10n.fuel_amount,
-              ),
+              hint: l10n.fuel_amount,
               onChanged: (_) {
                 setState(() {});
               },
             ),
             SizedBox(height: 16,),
-            TextField(
+            AppTextField(
               controller: _priceController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: InputDecoration(
-                labelText: l10n.fuel_price,
-              ),
+              hint: l10n.fuel_price,
               onChanged: (_) {
                 setState(() {});
               },
             ),
             SizedBox(height: 16,),
-            TextField(
+            AppTextField(
               controller: _totalCostController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: InputDecoration(
-                labelText: l10n.fuel_total_cost,
-              ),
+              hint: l10n.fuel_total_cost,
               onChanged: (_) {
                 setState(() {});
               },
@@ -179,12 +159,10 @@ class _FuelFormState extends State<FuelForm> {
 
             const SizedBox(height: 16),
 
-            TextField(
+            AppTextField(
               controller: _mileageController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: l10n.fuel_mileage,
-              ),
+              hint: l10n.fuel_mileage,
             ),
             SizedBox(height: 16,),
             Row(
@@ -410,11 +388,6 @@ class _FuelFormState extends State<FuelForm> {
 
     if (data.date != null) {
       _selectedDate = data.date;
-
-      _dateController.text =
-          '${data.date!.day.toString().padLeft(2, '0')}.'
-          '${data.date!.month.toString().padLeft(2, '0')}.'
-          '${data.date!.year}';
     }
   });
 }

@@ -1,10 +1,12 @@
 import 'package:car_tracker/services/car_manager.dart';
-import 'package:car_tracker/services/db.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:car_tracker/utils.dart';
 import 'package:car_tracker/services/maintenance_service.dart';
+import 'package:car_tracker/widgets/app_text_field.dart';
+import 'package:car_tracker/widgets/app_date_field.dart';
+import 'package:car_tracker/widgets/app_dropdown_field.dart';
 
 class AddReminderPage extends StatefulWidget{
   const AddReminderPage({super.key});
@@ -202,7 +204,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildLabel('Название ТО'),
-                _buildTextField(
+                AppTextField(
                   controller: _titleController, 
                   hint: 'Например: Замена масла',
                   validator: (value) {
@@ -214,12 +216,11 @@ class _AddReminderPageState extends State<AddReminderPage> {
                 ),
                 SizedBox(height: 8,),
                 _buildLabel("Категория"),
-                DropdownButtonFormField<String>(
-                  initialValue: _category,
-                  isExpanded: true,
-                  decoration: _inputDecoration(hint: "Выберите категорию"),
+                AppDropdownField<String>(
+                  value: _category,
+                  hint: "Выберите категорию",
                   items: _categories.map((category) {
-                    return DropdownMenuItem(
+                    return DropdownMenuItem<String>(
                       value: category,
                       child: Text(category),  
                     );
@@ -271,7 +272,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                 const SizedBox(height: 8,),
                 if (_byMileage) ...[
                   _buildLabel('Пробег'),
-                  _buildTextField(
+                  AppTextField(
                     controller: _currentMileageController, 
                     hint: "Введите текущий пробег",
                     suffix: 'км',
@@ -286,7 +287,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   ),
                   const SizedBox(height: 8,),
                   _buildLabel("Интервал"),
-                  _buildTextField(
+                  AppTextField(
                     controller: _intervalMileageController, 
                     hint: "Например: 10 000",
                     suffix: "км",
@@ -302,7 +303,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   ),
                   const SizedBox(height: 8,),
                   _buildLabel("Следующий пробег"),
-                  _buildTextField(
+                  AppTextField(
                     controller: _nextMileageController, 
                     hint: "Рассчитывается автоматически",
                     suffix: "км",
@@ -322,13 +323,13 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   )
                 ] else ...[
                   _buildLabel('Дата'),
-                  _buildDateField(
+                  AppDateField(
                     date: _currentDate, 
                     onTap: _selectCurrentDate
                   ),
                   const SizedBox(height: 8,),
                   _buildLabel('Интервал'),
-                  _buildTextField(
+                  AppTextField(
                     controller: _intervalMonthsController, 
                     hint: "Например: 6",
                     suffix: 'мес.',
@@ -344,7 +345,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   ),
                   const SizedBox(height: 8,),
                   _buildLabel('Следующая дата'),
-                  _buildDateField(
+                  AppDateField(
                     date: _nextDate,
                     placeholder: "Рассчитывается автоматически", 
                     onTap: _selectNextDate,
@@ -379,80 +380,13 @@ class _AddReminderPageState extends State<AddReminderPage> {
       )
     );
   }
-
   Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Text(text, style: TextStyle(
         color: AppTheme.textColor,
         fontSize: 15,
-        fontWeight: FontWeight.w600
       ),),
-    );
-  }
-
-  InputDecoration _inputDecoration({
-    required String hint,
-    String? suffix
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: const TextStyle(
-        fontSize: 14,
-        color: AppTheme.secondaryColor,
-      ),
-      suffixText: suffix,
-      filled: true,
-      fillColor: AppTheme.primaryColor.withValues(alpha: 0.04),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide.none
-      ),
-       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(
-          color: AppTheme.primaryColor.withValues(alpha: 0.12),
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(
-          color: AppTheme.primaryColor,
-          width: 1.5,
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Colors.red),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(
-          color: Colors.red,
-          width: 1.5,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hint,
-    String? suffix,
-    TextInputType? keyboardType,
-    List<TextInputFormatter>? inputFormatters,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      validator: validator,
-      decoration: _inputDecoration(
-        hint: hint,
-        suffix: suffix
-      ),
     );
   }
 
@@ -478,30 +412,6 @@ class _AddReminderPageState extends State<AddReminderPage> {
         ),
         ),
       ),
-    );
-  }
-  
-  Widget _buildDateField({
-    required DateTime? date, 
-    required VoidCallback onTap,
-    String placeholder = 'Выберите дату'
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: InputDecorator(
-        decoration: _inputDecoration(hint: placeholder).copyWith(
-          suffixIcon: const Icon(Icons.calendar_month_outlined)
-        ),
-        child: Text(
-          date == null? placeholder : formatDate(date),
-          style: TextStyle(
-            color: date == null ? AppTheme.secondaryColor : AppTheme.textColor,
-            fontSize: 14,
-            height: 1.7
-          ),
-        ),
-      )
     );
   }
 }
