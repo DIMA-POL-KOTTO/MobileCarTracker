@@ -1,3 +1,4 @@
+import 'package:car_tracker/pages/maintenance_page/complete_maintenance.dart';
 import 'package:car_tracker/services/car_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/theme/app_theme.dart';
@@ -406,6 +407,36 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   ),
                 ],
                 const SizedBox(height: 16),
+                widget.reminder != null ?
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: OutlinedButton(
+                    onPressed: () async {
+                      final result = Navigator.push<Map<String, dynamic>>(
+                        context,
+                        MaterialPageRoute(builder: (context) => CompleteMaintenance(reminder: widget.reminder!))
+                      );
+                      if (result == null || !context.mounted) return;
+                    },
+                    
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.green),
+                      foregroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      "Выполнить ТО",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ) : SizedBox(height: 0,),
+                SizedBox(height: 16,),
                 SizedBox(
                   width: double.infinity,
                   height: 54,
