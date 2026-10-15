@@ -12,4 +12,15 @@ class MaintenanceReminderService {
       reminder,
     );
   }
+
+  Future<List<Map<String, dynamic>>> getActiveReminders() async {
+    final db = await DatabaseService.instance.database;
+    final rows = await db.query(
+      'maintenance_reminders',
+      where: 'status = ?',
+      whereArgs: ['active'],
+      orderBy: 'id DESC',
+    );
+    return rows.map((row) => Map<String, dynamic>.from(row)).toList();
+  }
 }

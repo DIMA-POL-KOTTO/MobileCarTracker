@@ -2,7 +2,6 @@ import 'package:car_tracker/models/car.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:car_tracker/utils.dart';
 import 'dart:io';
 
 class CarCard extends StatelessWidget {
