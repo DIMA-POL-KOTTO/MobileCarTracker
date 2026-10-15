@@ -201,7 +201,6 @@ class _AddReminderPageState extends State<AddReminderPage> {
       'intervalD': !_byMileage
           ? int.tryParse(_intervalMonthsController.text)
           : null,
-      'status': existingReminder?['status'] ?? 'active',
     };
     try {
       if (existingReminder == null) {
@@ -407,36 +406,42 @@ class _AddReminderPageState extends State<AddReminderPage> {
                   ),
                 ],
                 const SizedBox(height: 16),
-                widget.reminder != null ?
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: OutlinedButton(
-                    onPressed: () async {
-                      final result = Navigator.push<Map<String, dynamic>>(
-                        context,
-                        MaterialPageRoute(builder: (context) => CompleteMaintenance(reminder: widget.reminder!))
-                      );
-                      if (result == null || !context.mounted) return;
-                    },
-                    
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.green),
-                      foregroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Text(
-                      "Выполнить ТО",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ) : SizedBox(height: 0,),
-                SizedBox(height: 16,),
+                widget.reminder != null
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            final completed = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CompleteMaintenance(
+                                  reminder: widget.reminder!,
+                                ),
+                              ),
+                            );
+                            if (completed != true || !context.mounted) return;
+                            Navigator.pop(context, true);
+                          },
+
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.green),
+                            foregroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: Text(
+                            "Выполнить ТО",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(height: 0),
+                SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   height: 54,
@@ -450,7 +455,9 @@ class _AddReminderPageState extends State<AddReminderPage> {
                       ),
                     ),
                     child: Text(
-                      widget.reminder == null ? 'Сохранить напоминание' : 'Изменить',
+                      widget.reminder == null
+                          ? 'Сохранить напоминание'
+                          : 'Изменить',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

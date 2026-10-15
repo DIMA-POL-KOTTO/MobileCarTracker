@@ -10,14 +10,9 @@ class MaintenanceReminderService {
     return db.insert('maintenance_reminders', reminder);
   }
 
-  Future<List<Map<String, dynamic>>> getActiveReminders() async {
+  Future<List<Map<String, dynamic>>> getReminders() async {
     final db = await DatabaseService.instance.database;
-    final rows = await db.query(
-      'maintenance_reminders',
-      where: 'status = ?',
-      whereArgs: ['active'],
-      orderBy: 'id DESC',
-    );
+    final rows = await db.query('maintenance_reminders', orderBy: 'id DESC');
     return rows.map((row) => Map<String, dynamic>.from(row)).toList();
   }
 
@@ -35,5 +30,25 @@ class MaintenanceReminderService {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<void> completeReminder(Map<String, dynamic> historyEntry) async {
+    final reminderId = historyEntry['reminderId'];
+    if (reminderId is! int) {
+      throw ArgumentError('History entry must have an integer reminderId');
+    }
+
+    final db = await DatabaseService.instance.database;
+    await db.transaction((transaction) async {
+      await transaction.insert('maintenance_history', historyEntry);
+      final deleted = await transaction.delete(
+        'maintenance_reminders',
+        where: 'id = ?',
+        whereArgs: [reminderId],
+      );
+      if (deleted == 0) {
+        throw StateError('Reminder $reminderId does not exist');
+      }
+    });
   }
 }

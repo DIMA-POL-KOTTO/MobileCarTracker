@@ -22,7 +22,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
   }
 
   void _loadReminders() {
-    _remindersFuture = MaintenanceReminderService.instance.getActiveReminders();
+    _remindersFuture = MaintenanceReminderService.instance.getReminders();
   }
 
   Future<void> _openReminderForm({Map<String, dynamic>? reminder}) async {
