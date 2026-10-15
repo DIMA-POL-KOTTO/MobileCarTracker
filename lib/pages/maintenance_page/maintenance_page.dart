@@ -1,4 +1,4 @@
-﻿import 'package:car_tracker/theme/app_theme.dart';
+import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/pages/maintenance_page/add_reminder_page.dart';
@@ -22,15 +22,14 @@ class _MaintenancePageState extends State<MaintenancePage> {
   }
 
   void _loadReminders() {
-    _remindersFuture =
-        MaintenanceReminderService.instance.getActiveReminders();
+    _remindersFuture = MaintenanceReminderService.instance.getActiveReminders();
   }
 
-  Future<void> _addReminder() async {
+  Future<void> _openReminderForm({Map<String, dynamic>? reminder}) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const AddReminderPage(),
+        builder: (context) => AddReminderPage(reminder: reminder),
       ),
     );
     if (!mounted) return;
@@ -81,10 +80,14 @@ class _MaintenancePageState extends State<MaintenancePage> {
 
             return ListView.separated(
               itemCount: reminders.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: 8),
-              itemBuilder: (context, index) =>
-                  ReminderCard(reminder: reminders[index]),
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                final reminder = reminders[index];
+                return ReminderCard(
+                  reminder: reminder,
+                  onTap: () => _openReminderForm(reminder: reminder),
+                );
+              },
             );
           },
         ),
@@ -93,7 +96,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
         heroTag: 'add_maintenance_button',
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: AppTheme.backgroundColor,
-        onPressed: _addReminder,
+        onPressed: () => _openReminderForm(),
         child: const Icon(Icons.add, size: 31),
       ),
     );
