@@ -1,4 +1,4 @@
-﻿import 'package:car_tracker/theme/app_theme.dart';
+import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:car_tracker/widgets/app_section_heading.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,8 @@ class MaintenancePage extends StatefulWidget {
 
 class _MaintenancePageState extends State<MaintenancePage> {
   final CarManager _carManager = CarManager.instance;
+  final Set<int> _selectedHistoryIds = {};
+  bool _isHistorySelectionMode = false;
   late Future<(List<Map<String, dynamic>>, List<Map<String, dynamic>>)>
   _dataFuture;
 
@@ -47,7 +49,9 @@ class _MaintenancePageState extends State<MaintenancePage> {
   Color _urgencyColor(Map<String, dynamic> reminder) {
     if (reminder['reminderType'] == 'mileage') {
       final dueMileage = int.tryParse(reminder['dueM']?.toString() ?? '');
-      final currentMileage = _carManager.cars.isEmpty ? null : _carManager.cars.first.mileage;
+      final currentMileage = _carManager.cars.isEmpty
+          ? null
+          : _carManager.cars.first.mileage;
       if (dueMileage == null || currentMileage == null) return Colors.green;
       if (currentMileage >= dueMileage) return Colors.red;
       if (dueMileage - currentMileage <= 1000) return Colors.amber;
@@ -112,12 +116,25 @@ class _MaintenancePageState extends State<MaintenancePage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.maintenance_page),
+        title: Text(
+          _isHistorySelectionMode
+              ? 'Выбрано: ${_selectedHistoryIds.length}'
+              : l10n.maintenance_page,
+        ),
         titleTextStyle: const TextStyle(
           color: AppTheme.textColor,
           fontSize: 28,
           fontWeight: FontWeight.bold,
         ),
+        actions: [
+          if (_isHistorySelectionMode)
+            IconButton(
+              onPressed: _selectedHistoryIds.isEmpty
+                  ? null
+                  : _confirmDeleteHistory,
+              icon: const Icon(Icons.delete),
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -171,12 +188,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
                     ],
                     if (history.isNotEmpty) ...[
                       AppSectionHeading(title: 'История'),
-                      ...history.map(
-                        (entry) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: HistoryMaintenanceCard(history: entry),
-                        ),
-                      ),
+                      ...history.map(_buildHistoryCard),
                     ],
                   ],
                 );
@@ -191,5 +203,78 @@ class _MaintenancePageState extends State<MaintenancePage> {
         child: const Icon(Icons.add, size: 31),
       ),
     );
+  }
+
+  Widget _buildHistoryCard(Map<String, dynamic> entry) {
+    final id = entry['id'];
+    final isSelected = id is int && _selectedHistoryIds.contains(id);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: HistoryMaintenanceCard(
+        history: entry,
+        leading: _isHistorySelectionMode && id is int
+            ? Checkbox(
+                value: isSelected,
+                onChanged: (_) => _toggleHistorySelection(id),
+              )
+            : null,
+        onLongPress: id is int ? () => _startHistorySelection(id) : null,
+        onTap: _isHistorySelectionMode && id is int
+            ? () => _toggleHistorySelection(id)
+            : null,
+      ),
+    );
+  }
+
+  void _startHistorySelection(int id) {
+    setState(() {
+      _isHistorySelectionMode = true;
+      _selectedHistoryIds.add(id);
+    });
+  }
+
+  void _toggleHistorySelection(int id) {
+    setState(() {
+      if (_selectedHistoryIds.contains(id)) {
+        _selectedHistoryIds.remove(id);
+      } else {
+        _selectedHistoryIds.add(id);
+      }
+      if (_selectedHistoryIds.isEmpty) {
+        _isHistorySelectionMode = false;
+      }
+    });
+  }
+
+  Future<void> _confirmDeleteHistory() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить записи ТО?'),
+        content: Text('Выбрано ${_selectedHistoryIds.length}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Удалить', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    await MaintenanceReminderService.instance.deleteHistoryEntries(
+      _selectedHistoryIds,
+    );
+    if (!mounted) return;
+    setState(() {
+      _selectedHistoryIds.clear();
+      _isHistorySelectionMode = false;
+      _loadMaintenanceData();
+    });
   }
 }

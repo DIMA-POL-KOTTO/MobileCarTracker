@@ -22,6 +22,18 @@ class MaintenanceReminderService {
     return rows.map((row) => Map<String, dynamic>.from(row)).toList();
   }
 
+  Future<void> deleteHistoryEntries(Set<int> ids) async {
+    if (ids.isEmpty) return;
+
+    final db = await DatabaseService.instance.database;
+    final placeholders = List.filled(ids.length, '?').join(',');
+    await db.delete(
+      'maintenance_history',
+      where: 'id IN ($placeholders)',
+      whereArgs: ids.toList(),
+    );
+  }
+
   Future<void> update(Map<String, dynamic> reminder) async {
     final id = reminder['id'];
     if (id is! int) {

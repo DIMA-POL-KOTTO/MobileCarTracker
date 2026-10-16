@@ -4,9 +4,17 @@ import 'package:flutter/material.dart';
 
 class HistoryMaintenanceCard extends StatelessWidget {
   final Map<String, dynamic> history;
+  final Widget? leading;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
-  const HistoryMaintenanceCard({super.key, required this.history, this.onTap});
+  const HistoryMaintenanceCard({
+    super.key,
+    required this.history,
+    this.leading,
+    this.onTap,
+    this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +33,7 @@ class HistoryMaintenanceCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -34,6 +43,7 @@ class HistoryMaintenanceCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (leading != null) ...[leading!, const SizedBox(width: 8)],
                   Container(
                     width: 42,
                     height: 42,
@@ -123,6 +133,8 @@ class HistoryMaintenanceCard extends StatelessWidget {
     if (value == null) return null;
     final amount = value is num ? value.toDouble() : double.tryParse('$value');
     if (amount == null) return null;
-    return amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
+    return amount == amount.roundToDouble()
+        ? amount.toStringAsFixed(0)
+        : amount.toStringAsFixed(2);
   }
 }
