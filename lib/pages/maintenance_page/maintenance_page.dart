@@ -3,6 +3,7 @@ import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:car_tracker/widgets/app_section_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:car_tracker/pages/maintenance_page/add_reminder_page.dart';
+import 'package:car_tracker/services/car_manager.dart';
 import 'package:car_tracker/services/maintenance_service.dart';
 import 'package:car_tracker/widgets/history_maintenance_card.dart';
 import 'package:car_tracker/widgets/reminder_card.dart';
@@ -15,13 +16,19 @@ class MaintenancePage extends StatefulWidget {
 }
 
 class _MaintenancePageState extends State<MaintenancePage> {
+  final CarManager _carManager = CarManager.instance;
   late Future<(List<Map<String, dynamic>>, List<Map<String, dynamic>>)>
   _dataFuture;
 
   @override
   void initState() {
     super.initState();
+    _carManager.addListener(_onCarManagerChanged);
     _loadMaintenanceData();
+  }
+
+  void _onCarManagerChanged() {
+    if (mounted) setState(() {});
   }
 
   void _loadMaintenanceData() {
@@ -30,10 +37,57 @@ class _MaintenancePageState extends State<MaintenancePage> {
 
   Future<(List<Map<String, dynamic>>, List<Map<String, dynamic>>)>
   _fetchMaintenanceData() async {
+    await _carManager.init();
     final service = MaintenanceReminderService.instance;
     final remindersFuture = service.getReminders();
     final historyFuture = service.getMaintenanceHistory();
     return (await remindersFuture, await historyFuture);
+  }
+
+  Color _urgencyColor(Map<String, dynamic> reminder) {
+    if (reminder['reminderType'] == 'mileage') {
+      final dueMileage = int.tryParse(reminder['dueM']?.toString() ?? '');
+      final currentMileage = _carManager.cars.isEmpty ? null : _carManager.cars.first.mileage;
+      if (dueMileage == null || currentMileage == null) return Colors.green;
+      if (currentMileage >= dueMileage) return Colors.red;
+      if (dueMileage - currentMileage <= 1000) return Colors.amber;
+      return Colors.green;
+    }
+
+    final dueDate = _parseReminderDate(reminder['dueD']?.toString());
+    if (dueDate == null) return Colors.green;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    if (dueDate.isBefore(today)) return Colors.red;
+    if (!dueDate.isAfter(_addCalendarMonth(today))) return Colors.amber;
+    return Colors.green;
+  }
+
+  DateTime? _parseReminderDate(String? value) {
+    if (value == null) return null;
+    final parts = value.split('.');
+    if (parts.length != 3) return null;
+
+    final day = int.tryParse(parts[0]);
+    final month = int.tryParse(parts[1]);
+    final year = int.tryParse(parts[2]);
+    if (day == null || month == null || year == null) return null;
+
+    final date = DateTime(year, month, day);
+    if (date.year != year || date.month != month || date.day != day) {
+      return null;
+    }
+    return date;
+  }
+
+  DateTime _addCalendarMonth(DateTime date) {
+    final monthIndex = date.month;
+    final year = date.year + monthIndex ~/ 12;
+    final month = monthIndex % 12 + 1;
+    final lastDay = DateTime(year, month + 1, 0).day;
+    final day = date.day > lastDay ? lastDay : date.day;
+    return DateTime(year, month, day);
   }
 
   Future<void> _openReminderForm({Map<String, dynamic>? reminder}) async {
@@ -45,6 +99,12 @@ class _MaintenancePageState extends State<MaintenancePage> {
     );
     if (!mounted) return;
     setState(_loadMaintenanceData);
+  }
+
+  @override
+  void dispose() {
+    _carManager.removeListener(_onCarManagerChanged);
+    super.dispose();
   }
 
   @override
@@ -103,6 +163,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
                           padding: const EdgeInsets.only(bottom: 16),
                           child: ReminderCard(
                             reminder: reminder,
+                            urgencyColor: _urgencyColor(reminder),
                             onTap: () => _openReminderForm(reminder: reminder),
                           ),
                         ),

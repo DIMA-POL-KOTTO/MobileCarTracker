@@ -5,8 +5,14 @@ import 'package:car_tracker/models/maintenance_category.dart';
 class ReminderCard extends StatelessWidget {
   final Map<String, dynamic> reminder;
   final VoidCallback? onTap;
+  final Color? urgencyColor;
 
-  const ReminderCard({super.key, required this.reminder, this.onTap});
+  const ReminderCard({
+    super.key,
+    required this.reminder,
+    this.onTap,
+    this.urgencyColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +81,17 @@ class ReminderCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (urgencyColor != null) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: urgencyColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
                 ],
               ),
               if ((isMileageReminder && hasDueMileage) ||
