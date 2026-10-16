@@ -1,7 +1,8 @@
 import 'package:car_tracker/pages/fuel_page/fuel_form.dart';
+import 'package:car_tracker/services/scan_manager.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:car_tracker/services/image_picker.dart';
 import 'package:flutter/material.dart';
 
 class AddFuelPage extends StatelessWidget {
@@ -10,6 +11,7 @@ class AddFuelPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final ImagePickerService imagePickerService = ImagePickerService();
     return Scaffold(
       appBar: AppBar(
         
@@ -27,14 +29,15 @@ class AddFuelPage extends StatelessWidget {
                 height: 90,
                 child: ElevatedButton(
                   onPressed: () async {
-                    final picker = ImagePicker();
-
-                    final image = await picker.pickImage(source: ImageSource.camera);
+                    final image = await imagePickerService.pickImage(context);
+                    
                     if (image == null) {
                       return;
                     }
-                    print('Фото чека: ${image.path}');
-                  
+                    if (!context.mounted) return;
+                    
+                    ScanManager.instance.createScan(image);
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

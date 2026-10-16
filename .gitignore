@@ -46,3 +46,10 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# API keys
+lib/config/api_keys.dart
+
+# Other
+db_sync.ps1
+/db_sync

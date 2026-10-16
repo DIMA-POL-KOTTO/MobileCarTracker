@@ -2,6 +2,7 @@ import 'package:car_tracker/models/fuel_type.dart';
 
 class ParsedReceipt {
   final String? station;
+  final String? organization;
   final DateTime? date;
   final FuelType? fuelType;
   final double? amount;
@@ -10,6 +11,7 @@ class ParsedReceipt {
 
   ParsedReceipt({
     this.station,
+    this.organization,
     this.date,
     this.fuelType,
     this.amount,

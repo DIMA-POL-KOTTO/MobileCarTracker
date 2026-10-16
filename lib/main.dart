@@ -1,11 +1,12 @@
-import 'package:car_tracker/pages/home_page.dart';
+import 'package:car_tracker/pages/home_page/home_page.dart';
 import 'package:car_tracker/pages/fuel_page/fuel_page.dart';
-import 'package:car_tracker/pages/maintenance_page.dart';
+import 'package:car_tracker/pages/maintenance_page/maintenance_page.dart';
 import 'package:car_tracker/pages/more_page/more_page.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:car_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:car_tracker/services/scan_manager.dart';
 
 void main() {
   runApp(const CarCareApp());
@@ -61,6 +62,23 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  final ScanManager _scanManager = ScanManager.instance;
+
+  @override
+  void initState(){
+    super.initState();
+    _scanManager.addListener(_onScanChanged);
+  }
+
+  @override
+  void dispose() {
+    _scanManager.removeListener(_onScanChanged);
+    super.dispose();
+  }
+
+  void _onScanChanged() {
+    setState(() {});
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -78,7 +96,10 @@ class _MainScreenState extends State<MainScreen> {
       MorePage(onChangeLanguage: widget.onChangeLanguage),
     ];
     return Scaffold(
-      body: pages[_selectedIndex],
+      body: Stack(children: [
+        pages[_selectedIndex],
+        
+      ],),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
 
@@ -111,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
       )
     );
   }
-}
+} 
 
 
 
