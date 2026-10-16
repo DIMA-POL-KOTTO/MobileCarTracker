@@ -2,6 +2,7 @@ import 'package:car_tracker/services/car_manager.dart';
 import 'package:car_tracker/services/maintenance_service.dart';
 import 'package:car_tracker/theme/app_theme.dart';
 import 'package:car_tracker/utils.dart';
+import 'package:car_tracker/widgets/app_section_heading.dart';
 import 'package:car_tracker/widgets/app_text_field.dart';
 import 'package:car_tracker/widgets/reminder_card.dart';
 import 'package:flutter/material.dart';
@@ -110,13 +111,13 @@ class _CompleteMaintenanceState extends State<CompleteMaintenance> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionHeading(
+                const AppSectionHeading(
                   title: 'Выполняемое ТО',
                   subtitle: 'Проверьте выбранное напоминание',
                 ),
                 ReminderCard(reminder: widget.reminder),
                 const SizedBox(height: 28),
-                const _SectionHeading(title: 'Детали выполнения'),
+                const AppSectionHeading(title: 'Детали выполнения'),
                 const SizedBox(height: 8),
                 const _FieldLabel('Пробег'),
                 AppTextField(
@@ -192,43 +193,6 @@ class _CompleteMaintenanceState extends State<CompleteMaintenance> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SectionHeading extends StatelessWidget {
-  final String title;
-  final String? subtitle;
-
-  const _SectionHeading({required this.title, this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppTheme.textColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              subtitle!,
-              style: const TextStyle(
-                color: AppTheme.secondaryColor,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ],
       ),
     );
   }

@@ -152,8 +152,7 @@ class DatabaseService {
             )
           ''');
           await db.execute('''
-            INSERT INTO maintenance_history_new
-              (id, carId, reminderId, title, category, date, mileage, cost, comment)
+            INSERT INTO maintenance_history_new (id, carId, reminderId, title, category, date, mileage, cost, comment)
             SELECT id, carId, reminderId, title, category, date, mileage, cost, comment
             FROM maintenance_history
           ''');
@@ -179,11 +178,9 @@ class DatabaseService {
             )
           ''');
           await db.execute('''
-            INSERT INTO maintenance_reminders_new
-              (id, carId, title, category, reminderType, dueM, dueD,
+            INSERT INTO maintenance_reminders_new (id, carId, title, category, reminderType, dueM, dueD,
                repeatByM, intervalM, repeatByD, intervalD)
-            SELECT id, carId, title, category, reminderType, dueM, dueD,
-                   repeatByM, intervalM, repeatByD, intervalD
+            SELECT id, carId, title, category, reminderType, dueM, dueD, repeatByM, intervalM, repeatByD, intervalD
             FROM maintenance_reminders
           ''');
           await db.execute('DROP TABLE maintenance_reminders');

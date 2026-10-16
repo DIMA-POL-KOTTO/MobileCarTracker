@@ -16,6 +16,12 @@ class MaintenanceReminderService {
     return rows.map((row) => Map<String, dynamic>.from(row)).toList();
   }
 
+  Future<List<Map<String, dynamic>>> getMaintenanceHistory() async {
+    final db = await DatabaseService.instance.database;
+    final rows = await db.query('maintenance_history', orderBy: 'id DESC');
+    return rows.map((row) => Map<String, dynamic>.from(row)).toList();
+  }
+
   Future<void> update(Map<String, dynamic> reminder) async {
     final id = reminder['id'];
     if (id is! int) {
